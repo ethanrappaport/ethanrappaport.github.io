@@ -36,23 +36,71 @@
     }
   }
 
-  html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
+  html { background: var(--bg); color: var(--ink); font-family: var(--serif); scroll-behavior: smooth; }
   body { min-height: 100vh; }
 
-  .site { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 
-  nav { display: flex; gap: 2rem; margin-bottom: 4rem; border-bottom: 0.5px solid var(--rule); padding-bottom: 1rem; }
+  .anim { opacity: 0; }
+  .anim.visible { animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .anim-d1 { animation-delay: 0.05s; }
+  .anim-d2 { animation-delay: 0.15s; }
+  .anim-d3 { animation-delay: 0.25s; }
+  .anim-d4 { animation-delay: 0.35s; }
+  .anim-d5 { animation-delay: 0.45s; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--rule);
+    display: flex; gap: 2rem;
+    padding: 1rem 1.5rem;
+  }
   nav a {
     font-family: var(--mono); font-size: 12px; color: var(--muted);
-    text-decoration: none; letter-spacing: 0.08em; cursor: pointer;
+    text-decoration: none; letter-spacing: 0.08em;
     text-transform: uppercase; background: none; border: none; padding: 0;
+    cursor: pointer; transition: color 0.2s;
   }
   nav a:hover, nav a.active { color: var(--ink); }
+
+  .hero {
+    width: 100%; height: 420px;
+    position: relative; overflow: hidden;
+    background: var(--bg2);
+  }
+  .hero img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block;
+    animation: fadeIn 1s ease forwards;
+  }
+  .hero-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+    color: var(--muted); font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.06em; text-transform: uppercase; text-align: center;
+    padding: 2rem;
+  }
+  .hero-placeholder svg { opacity: 0.25; margin-bottom: 4px; }
+  .hero-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+  }
+
+  .site { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
 
   .page { display: none; }
   .page.active { display: block; }
 
-  /* HOME */
   .home-header { margin-bottom: 3rem; }
   .home-header h1 { font-size: 2.8rem; font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem; font-style: italic; }
   .home-header .sub { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
@@ -61,7 +109,7 @@
     color: var(--blue-text); background: var(--blue-bg);
     padding: 4px 10px; border-radius: 3px; letter-spacing: 0.05em; margin-bottom: 1.5rem;
   }
-  .home-bio { font-size: 1.15rem; line-height: 1.8; color: var(--ink); max-width: 600px; }
+  .home-bio { font-size: 1.15rem; line-height: 1.8; max-width: 600px; }
   .home-bio p { margin-bottom: 1rem; }
   .home-bio a { color: var(--ink); }
 
@@ -74,14 +122,12 @@
   .pub-item .journal { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
   .contact-line { font-size: 1rem; color: var(--muted); margin-bottom: 0.4rem; display: flex; align-items: baseline; gap: 8px; }
   .contact-line span.label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); min-width: 64px; flex-shrink: 0; }
-  .contact-line a { color: var(--muted); text-decoration: none; }
+  .contact-line a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
   .contact-line a:hover { color: var(--ink); }
 
-  /* SECTION HEADER */
   .section-header { margin-bottom: 2.5rem; }
   .section-header h2 { font-size: 2rem; font-weight: 400; font-style: italic; }
 
-  /* RESEARCH */
   .research-block { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 0.5px solid var(--rule); }
   .research-block:last-child { border-bottom: none; }
   .research-block h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.4rem; }
@@ -90,7 +136,6 @@
   .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.8rem; }
   .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 2px; background: var(--bg2); color: var(--faint); }
 
-  /* PUBLICATIONS */
   .pub-entry { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 0.5px solid var(--rule); }
   .pub-entry:last-child { border-bottom: none; }
   .pub-year { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 4px; }
@@ -101,7 +146,6 @@
   .pub-link { font-family: var(--mono); font-size: 11px; color: var(--blue-text); text-decoration: none; margin-left: 10px; }
   .pub-link:hover { text-decoration: underline; }
 
-  /* CV */
   .cv-section { margin-bottom: 2.5rem; }
   .cv-section h3 {
     font-family: var(--mono); font-size: 11px; text-transform: uppercase;
@@ -111,7 +155,7 @@
   .cv-entry { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; margin-bottom: 1.2rem; }
   @media (max-width: 480px) { .cv-entry { grid-template-columns: 1fr; gap: 0.2rem; } }
   .cv-date { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 3px; }
-  .cv-body .role { font-size: 1rem; font-weight: 400; }
+  .cv-body .role { font-size: 1rem; }
   .cv-body .place { font-size: 0.9rem; color: var(--muted); font-style: italic; margin-top: 1px; }
   .cv-body .desc { font-size: 0.9rem; color: var(--muted); margin-top: 4px; line-height: 1.6; }
   .award-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.7rem; }
@@ -122,28 +166,42 @@
 </style>
 </head>
 <body>
-<div class="site">
 
-  <nav>
-    <a class="active" onclick="show('home', this)">Home</a>
-    <a onclick="show('research', this)">Research</a>
-    <a onclick="show('publications', this)">Publications</a>
-    <a onclick="show('cv', this)">CV</a>
-  </nav>
+<nav>
+  <a class="active" onclick="show('home', this)">Home</a>
+  <a onclick="show('research', this)">Research</a>
+  <a onclick="show('publications', this)">Publications</a>
+  <a onclick="show('cv', this)">CV</a>
+</nav>
+
+<!-- HERO: rename your photo to photo.jpg and put it in the same folder as this file -->
+<div class="hero" id="hero">
+  <img src="photo.jpg" alt="Ethan Rappaport"
+       onerror="this.style.display='none'; document.getElementById('hero-placeholder').style.display='flex';">
+  <div class="hero-overlay"></div>
+  <div class="hero-placeholder" id="hero-placeholder" style="display:none;">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="15" r="8" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M6 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Rename your photo to photo.jpg and place it in the same folder as this file
+  </div>
+</div>
+
+<div class="site">
 
   <!-- HOME -->
   <div class="page active" id="home">
     <div class="home-header">
-      <h1>Ethan Rappaport</h1>
-      <div class="sub">PhD Student &middot; BEES &middot; University of Maryland</div>
-      <div class="nsf-badge">NSF Graduate Research Fellow</div>
-      <div class="home-bio">
+      <h1 class="anim anim-d1">Ethan Rappaport</h1>
+      <div class="sub anim anim-d2">PhD Student &middot; BEES &middot; University of Maryland</div>
+      <div class="nsf-badge anim anim-d3">NSF Graduate Research Fellow</div>
+      <div class="home-bio anim anim-d4">
         <p>I'm a mathematical biologist interested in how ecological and evolutionary dynamics shape microbial communities. My work bridges theoretical modeling and computational analysis, with a focus on colonization resistance, consumer-resource dynamics, and host-phage coevolution.</p>
         <p>I completed my B.S. in Mathematics and Biology at Boston College, where I worked in the Momeni Lab on microbial community ecology. I'm now a PhD student in the BEES program at the University of Maryland.</p>
       </div>
     </div>
-
-    <div class="home-grid">
+    <div class="home-grid anim anim-d5">
       <div class="home-block">
         <h3>Recent work</h3>
         <div class="pub-item">
@@ -157,25 +215,17 @@
       </div>
       <div class="home-block">
         <h3>Contact</h3>
-        <div class="contact-line">
-          <span class="label">Email</span>
-          <a href="mailto:esrdev@gmail.com">esrdev@gmail.com</a>
-        </div>
-        <div class="contact-line">
-          <span class="label">Program</span> BEES, UMD
-        </div>
-        <div class="contact-line">
-          <span class="label">Location</span> College Park, MD
-        </div>
+        <div class="contact-line"><span class="label">Email</span><a href="mailto:esrdev@gmail.com">esrdev@gmail.com</a></div>
+        <div class="contact-line"><span class="label">Program</span>BEES, UMD</div>
+        <div class="contact-line"><span class="label">Location</span>College Park, MD</div>
       </div>
     </div>
   </div>
 
   <!-- RESEARCH -->
   <div class="page" id="research">
-    <div class="section-header"><h2>Research</h2></div>
-
-    <div class="research-block">
+    <div class="section-header anim anim-d1"><h2>Research</h2></div>
+    <div class="research-block anim anim-d2">
       <h3>Colonization resistance in microbial communities</h3>
       <div class="meta">Momeni Lab &middot; Boston College &middot; 2023&ndash;2025</div>
       <p>My undergraduate thesis and first-author publication examined how resource diversity and supply rates shape the ability of resident microbial communities to resist invasion by foreign species. I developed a consumer-resource population model and analyzed how environmental parameters drive bifurcations in invasion outcomes, finding that both resource richness and supply rates are key determinants of colonization resistance.</p>
@@ -186,8 +236,7 @@
         <span class="tag">microbial ecology</span>
       </div>
     </div>
-
-    <div class="research-block">
+    <div class="research-block anim anim-d3">
       <h3>Host-phage coevolution dynamics</h3>
       <div class="meta">University of Maryland &middot; 2025&ndash;present</div>
       <p>I am developing computational models of host-phage coevolution, simulating how reciprocal selection pressures drive the diversification of bacterial hosts and their viral predators. This work combines differential equation modeling with phylogenetic tracking to characterize how coevolutionary dynamics produce diversity over ecological timescales.</p>
@@ -198,8 +247,7 @@
         <span class="tag">MATLAB</span>
       </div>
     </div>
-
-    <div class="research-block">
+    <div class="research-block anim anim-d4">
       <h3>Spatial structure and microbial interactions</h3>
       <div class="meta">Collaborative work &middot; 2025&ndash;2026</div>
       <p>Contributing author on work examining how spatial structure mediates the outcomes of population interactions in microbial communities, with implications for understanding community assembly and stability in structured environments.</p>
@@ -213,31 +261,28 @@
 
   <!-- PUBLICATIONS -->
   <div class="page" id="publications">
-    <div class="section-header"><h2>Publications</h2></div>
-
-    <div class="pub-entry">
+    <div class="section-header anim anim-d1"><h2>Publications</h2></div>
+    <div class="pub-entry anim anim-d2">
       <div class="pub-year">2026</div>
       <div class="pub-content">
         <div class="title">Interplay of spatial structure and population interactions in microbial communities</div>
         <div class="authors">Warrier V., Chen Y., <strong>Rappaport E.</strong>, Haruta S., Youk H., Momeni B.</div>
         <div class="venue">Environmental Microbiology
-          <!-- Add DOI link here: <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
+          <!-- <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
         </div>
       </div>
     </div>
-
-    <div class="pub-entry">
+    <div class="pub-entry anim anim-d3">
       <div class="pub-year">2025</div>
       <div class="pub-content">
         <div class="title">Resource diversity and supply drive colonization resistance</div>
         <div class="authors"><strong>Rappaport E.</strong>, Mirollo R., Momeni B.</div>
         <div class="venue">PLoS Computational Biology
-          <!-- Add DOI link here: <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
+          <!-- <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
         </div>
       </div>
     </div>
-
-    <div class="pub-entry">
+    <div class="pub-entry anim anim-d4">
       <div class="pub-year">2025</div>
       <div class="pub-content">
         <div class="title">Colonization resistance in a microbial consumer-resource population model</div>
@@ -249,9 +294,8 @@
 
   <!-- CV -->
   <div class="page" id="cv">
-    <div class="section-header"><h2>Curriculum vitae</h2></div>
-
-    <div class="cv-section">
+    <div class="section-header anim anim-d1"><h2>Curriculum vitae</h2></div>
+    <div class="cv-section anim anim-d2">
       <h3>Education</h3>
       <div class="cv-entry">
         <div class="cv-date">2026&ndash;</div>
@@ -269,8 +313,7 @@
         </div>
       </div>
     </div>
-
-    <div class="cv-section">
+    <div class="cv-section anim anim-d3">
       <h3>Fellowships &amp; awards</h3>
       <div class="award-row"><span class="award-name">NSF Graduate Research Fellowship</span><span class="award-year">2026&ndash;</span></div>
       <div class="award-row"><span class="award-name">Boston College Undergraduate Research Fellowship</span><span class="award-year">2024&ndash;2025</span></div>
@@ -280,8 +323,7 @@
       <div class="award-row"><span class="award-name">Dean's Scholar</span><span class="award-year">2024</span></div>
       <div class="award-row"><span class="award-name">Alpha Sigma Nu</span><span class="award-year">2024</span></div>
     </div>
-
-    <div class="cv-section">
+    <div class="cv-section anim anim-d4">
       <h3>Research experience</h3>
       <div class="cv-entry">
         <div class="cv-date">2023&ndash;2025</div>
@@ -292,8 +334,7 @@
         </div>
       </div>
     </div>
-
-    <div class="cv-section">
+    <div class="cv-section anim anim-d5">
       <h3>Teaching</h3>
       <div class="cv-entry">
         <div class="cv-date">2022&ndash;2025</div>
@@ -308,12 +349,11 @@
         <div class="cv-body">
           <div class="role">Math Instructor</div>
           <div class="place">Summer Scholars Program, Friends' Central School</div>
-          <div class="desc">Taught introductory geometry to rising high school freshmen; developed curriculum and managed coursework through Canvas.</div>
+          <div class="desc">Taught introductory geometry to rising high school freshmen; developed full curriculum and managed coursework through Canvas.</div>
         </div>
       </div>
     </div>
-
-    <div class="cv-section">
+    <div class="cv-section anim anim-d5">
       <h3>Skills</h3>
       <div class="skills-block">
         <span class="label">Languages:</span> MATLAB, Python, R, Mathematica, Unix<br>
@@ -332,7 +372,19 @@
     document.getElementById(id).classList.add('active');
     el.classList.add('active');
     window.scrollTo(0, 0);
+    triggerAnims();
   }
+
+  function triggerAnims() {
+    var elems = document.querySelectorAll('.page.active .anim');
+    elems.forEach(function(el) {
+      el.classList.remove('visible');
+      void el.offsetWidth;
+      el.classList.add('visible');
+    });
+  }
+
+  window.addEventListener('load', triggerAnims);
 </script>
 </body>
 </html>
