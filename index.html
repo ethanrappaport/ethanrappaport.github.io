@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethan Rappaport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --ink: #1a1a18;
+    --muted: #5f5e5a;
+    --faint: #888780;
+    --rule: rgba(0,0,0,0.12);
+    --bg: #ffffff;
+    --bg2: #f1efe8;
+    --blue-bg: #e6f1fb;
+    --blue-text: #0c447c;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e8e6df;
+      --muted: #b4b2a9;
+      --faint: #888780;
+      --rule: rgba(255,255,255,0.12);
+      --bg: #1c1c1a;
+      --bg2: #2c2c2a;
+      --blue-bg: #042c53;
+      --blue-text: #85b7eb;
+    }
+  }
+
+  html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
+  body { min-height: 100vh; }
+
+  .site { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+  nav { display: flex; gap: 2rem; margin-bottom: 4rem; border-bottom: 0.5px solid var(--rule); padding-bottom: 1rem; }
+  nav a {
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    text-decoration: none; letter-spacing: 0.08em; cursor: pointer;
+    text-transform: uppercase; background: none; border: none; padding: 0;
+  }
+  nav a:hover, nav a.active { color: var(--ink); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* HOME */
+  .home-header { margin-bottom: 3rem; }
+  .home-header h1 { font-size: 2.8rem; font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem; font-style: italic; }
+  .home-header .sub { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .nsf-badge {
+    display: inline-block; font-family: var(--mono); font-size: 11px;
+    color: var(--blue-text); background: var(--blue-bg);
+    padding: 4px 10px; border-radius: 3px; letter-spacing: 0.05em; margin-bottom: 1.5rem;
+  }
+  .home-bio { font-size: 1.15rem; line-height: 1.8; color: var(--ink); max-width: 600px; }
+  .home-bio p { margin-bottom: 1rem; }
+  .home-bio a { color: var(--ink); }
+
+  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+  @media (max-width: 520px) { .home-grid { grid-template-columns: 1fr; } }
+
+  .home-block h3 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-bottom: 1rem; }
+  .pub-item { margin-bottom: 1.2rem; }
+  .pub-item .title { font-size: 1rem; line-height: 1.5; }
+  .pub-item .journal { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .contact-line { font-size: 1rem; color: var(--muted); margin-bottom: 0.4rem; display: flex; align-items: baseline; gap: 8px; }
+  .contact-line span.label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); min-width: 64px; flex-shrink: 0; }
+  .contact-line a { color: var(--muted); text-decoration: none; }
+  .contact-line a:hover { color: var(--ink); }
+
+  /* SECTION HEADER */
+  .section-header { margin-bottom: 2.5rem; }
+  .section-header h2 { font-size: 2rem; font-weight: 400; font-style: italic; }
+
+  /* RESEARCH */
+  .research-block { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 0.5px solid var(--rule); }
+  .research-block:last-child { border-bottom: none; }
+  .research-block h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.4rem; }
+  .research-block .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+  .research-block p { font-size: 1rem; line-height: 1.75; color: var(--muted); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.8rem; }
+  .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 2px; background: var(--bg2); color: var(--faint); }
+
+  /* PUBLICATIONS */
+  .pub-entry { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 0.5px solid var(--rule); }
+  .pub-entry:last-child { border-bottom: none; }
+  .pub-year { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 4px; }
+  .pub-content .title { font-size: 1.05rem; line-height: 1.5; margin-bottom: 0.3rem; }
+  .pub-content .authors { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.25rem; }
+  .pub-content .authors strong { color: var(--ink); font-weight: 400; }
+  .pub-content .venue { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .pub-link { font-family: var(--mono); font-size: 11px; color: var(--blue-text); text-decoration: none; margin-left: 10px; }
+  .pub-link:hover { text-decoration: underline; }
+
+  /* CV */
+  .cv-section { margin-bottom: 2.5rem; }
+  .cv-section h3 {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--faint);
+    border-bottom: 0.5px solid var(--rule); padding-bottom: 0.5rem; margin-bottom: 1.2rem;
+  }
+  .cv-entry { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+  @media (max-width: 480px) { .cv-entry { grid-template-columns: 1fr; gap: 0.2rem; } }
+  .cv-date { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 3px; }
+  .cv-body .role { font-size: 1rem; font-weight: 400; }
+  .cv-body .place { font-size: 0.9rem; color: var(--muted); font-style: italic; margin-top: 1px; }
+  .cv-body .desc { font-size: 0.9rem; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+  .award-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.7rem; }
+  .award-name { font-size: 0.95rem; }
+  .award-year { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .skills-block { font-size: 0.95rem; line-height: 2; color: var(--muted); }
+  .skills-block span.label { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="site">
+
+  <nav>
+    <a class="active" onclick="show('home', this)">Home</a>
+    <a onclick="show('research', this)">Research</a>
+    <a onclick="show('publications', this)">Publications</a>
+    <a onclick="show('cv', this)">CV</a>
+  </nav>
+
+  <!-- HOME -->
+  <div class="page active" id="home">
+    <div class="home-header">
+      <h1>Ethan Rappaport</h1>
+      <div class="sub">PhD Student &middot; BEES &middot; University of Maryland</div>
+      <div class="nsf-badge">NSF Graduate Research Fellow</div>
+      <div class="home-bio">
+        <p>I'm a mathematical biologist interested in how ecological and evolutionary dynamics shape microbial communities. My work bridges theoretical modeling and computational analysis, with a focus on colonization resistance, consumer-resource dynamics, and host-phage coevolution.</p>
+        <p>I completed my B.S. in Mathematics and Biology at Boston College, where I worked in the Momeni Lab on microbial community ecology. I'm now a PhD student in the BEES program at the University of Maryland.</p>
+      </div>
+    </div>
+
+    <div class="home-grid">
+      <div class="home-block">
+        <h3>Recent work</h3>
+        <div class="pub-item">
+          <div class="title">Resource diversity and supply drive colonization resistance</div>
+          <div class="journal">PLoS Computational Biology &middot; 2025</div>
+        </div>
+        <div class="pub-item">
+          <div class="title">Interplay of spatial structure and population interactions in microbial communities</div>
+          <div class="journal">Environmental Microbiology &middot; 2026</div>
+        </div>
+      </div>
+      <div class="home-block">
+        <h3>Contact</h3>
+        <div class="contact-line">
+          <span class="label">Email</span>
+          <a href="mailto:esrdev@gmail.com">esrdev@gmail.com</a>
+        </div>
+        <div class="contact-line">
+          <span class="label">Program</span> BEES, UMD
+        </div>
+        <div class="contact-line">
+          <span class="label">Location</span> College Park, MD
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="page" id="research">
+    <div class="section-header"><h2>Research</h2></div>
+
+    <div class="research-block">
+      <h3>Colonization resistance in microbial communities</h3>
+      <div class="meta">Momeni Lab &middot; Boston College &middot; 2023&ndash;2025</div>
+      <p>My undergraduate thesis and first-author publication examined how resource diversity and supply rates shape the ability of resident microbial communities to resist invasion by foreign species. I developed a consumer-resource population model and analyzed how environmental parameters drive bifurcations in invasion outcomes, finding that both resource richness and supply rates are key determinants of colonization resistance.</p>
+      <div class="tag-row">
+        <span class="tag">consumer-resource models</span>
+        <span class="tag">colonization resistance</span>
+        <span class="tag">dynamical systems</span>
+        <span class="tag">microbial ecology</span>
+      </div>
+    </div>
+
+    <div class="research-block">
+      <h3>Host-phage coevolution dynamics</h3>
+      <div class="meta">University of Maryland &middot; 2025&ndash;present</div>
+      <p>I am developing computational models of host-phage coevolution, simulating how reciprocal selection pressures drive the diversification of bacterial hosts and their viral predators. This work combines differential equation modeling with phylogenetic tracking to characterize how coevolutionary dynamics produce diversity over ecological timescales.</p>
+      <div class="tag-row">
+        <span class="tag">host-phage coevolution</span>
+        <span class="tag">ODE/DDE systems</span>
+        <span class="tag">phylogenetics</span>
+        <span class="tag">MATLAB</span>
+      </div>
+    </div>
+
+    <div class="research-block">
+      <h3>Spatial structure and microbial interactions</h3>
+      <div class="meta">Collaborative work &middot; 2025&ndash;2026</div>
+      <p>Contributing author on work examining how spatial structure mediates the outcomes of population interactions in microbial communities, with implications for understanding community assembly and stability in structured environments.</p>
+      <div class="tag-row">
+        <span class="tag">spatial ecology</span>
+        <span class="tag">community assembly</span>
+        <span class="tag">population dynamics</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUBLICATIONS -->
+  <div class="page" id="publications">
+    <div class="section-header"><h2>Publications</h2></div>
+
+    <div class="pub-entry">
+      <div class="pub-year">2026</div>
+      <div class="pub-content">
+        <div class="title">Interplay of spatial structure and population interactions in microbial communities</div>
+        <div class="authors">Warrier V., Chen Y., <strong>Rappaport E.</strong>, Haruta S., Youk H., Momeni B.</div>
+        <div class="venue">Environmental Microbiology
+          <!-- Add DOI link here: <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="pub-entry">
+      <div class="pub-year">2025</div>
+      <div class="pub-content">
+        <div class="title">Resource diversity and supply drive colonization resistance</div>
+        <div class="authors"><strong>Rappaport E.</strong>, Mirollo R., Momeni B.</div>
+        <div class="venue">PLoS Computational Biology
+          <!-- Add DOI link here: <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="pub-entry">
+      <div class="pub-year">2025</div>
+      <div class="pub-content">
+        <div class="title">Colonization resistance in a microbial consumer-resource population model</div>
+        <div class="authors"><strong>Rappaport E.</strong></div>
+        <div class="venue">Bachelor's thesis &middot; Boston College</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CV -->
+  <div class="page" id="cv">
+    <div class="section-header"><h2>Curriculum vitae</h2></div>
+
+    <div class="cv-section">
+      <h3>Education</h3>
+      <div class="cv-entry">
+        <div class="cv-date">2026&ndash;</div>
+        <div class="cv-body">
+          <div class="role">Ph.D., Behavior, Ecology, Evolution and Systematics</div>
+          <div class="place">University of Maryland, College Park</div>
+        </div>
+      </div>
+      <div class="cv-entry">
+        <div class="cv-date">2021&ndash;2025</div>
+        <div class="cv-body">
+          <div class="role">B.S., Mathematics and Biology &mdash; summa cum laude</div>
+          <div class="place">Boston College</div>
+          <div class="desc">Scholar of the College &middot; Departmental honors &middot; Thesis: Colonization resistance in a microbial consumer-resource population model</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <h3>Fellowships &amp; awards</h3>
+      <div class="award-row"><span class="award-name">NSF Graduate Research Fellowship</span><span class="award-year">2026&ndash;</span></div>
+      <div class="award-row"><span class="award-name">Boston College Undergraduate Research Fellowship</span><span class="award-year">2024&ndash;2025</span></div>
+      <div class="award-row"><span class="award-name">Scholar of the College</span><span class="award-year">2025</span></div>
+      <div class="award-row"><span class="award-name">Phi Beta Kappa</span><span class="award-year">2025</span></div>
+      <div class="award-row"><span class="award-name">Order of the Cross and Crown</span><span class="award-year">2025</span></div>
+      <div class="award-row"><span class="award-name">Dean's Scholar</span><span class="award-year">2024</span></div>
+      <div class="award-row"><span class="award-name">Alpha Sigma Nu</span><span class="award-year">2024</span></div>
+    </div>
+
+    <div class="cv-section">
+      <h3>Research experience</h3>
+      <div class="cv-entry">
+        <div class="cv-date">2023&ndash;2025</div>
+        <div class="cv-body">
+          <div class="role">Undergraduate Researcher</div>
+          <div class="place">Momeni Lab, Boston College</div>
+          <div class="desc">Independent study in microbial community ecology; produced first-author publication, honors thesis, and contributed to collaborative review article. Presented at external venues including Harvard's Microbial Science Initiative Symposium and the M3 Mid-Atlantic Microbiome Meet-up.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <h3>Teaching</h3>
+      <div class="cv-entry">
+        <div class="cv-date">2022&ndash;2025</div>
+        <div class="cv-body">
+          <div class="role">Tutor and Grader</div>
+          <div class="place">Department of Mathematics, Boston College</div>
+          <div class="desc">Tutored students in calculus, linear algebra, statistics, and proof writing.</div>
+        </div>
+      </div>
+      <div class="cv-entry">
+        <div class="cv-date">2021</div>
+        <div class="cv-body">
+          <div class="role">Math Instructor</div>
+          <div class="place">Summer Scholars Program, Friends' Central School</div>
+          <div class="desc">Taught introductory geometry to rising high school freshmen; developed curriculum and managed coursework through Canvas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <h3>Skills</h3>
+      <div class="skills-block">
+        <span class="label">Languages:</span> MATLAB, Python, R, Mathematica, Unix<br>
+        <span class="label">Methods:</span> Dynamical systems analysis, ODE/DDE modeling, Bayesian inference, molecular phylogenetics, dimensionality reduction<br>
+        <span class="label">Tools:</span> NCBI BLAST, BEAST, ASTRAL, Slurm, Phyluce, Adobe Creative Suite
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(id, el) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>
