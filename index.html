@@ -36,11 +36,12 @@
     }
   }
 
-  html { background: var(--bg); color: var(--ink); font-family: var(--serif); scroll-behavior: smooth; }
+  html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
   body { min-height: 100vh; }
 
+  /* ── ANIMATIONS ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes fadeIn {
@@ -48,14 +49,21 @@
     to   { opacity: 1; }
   }
 
-  .anim { opacity: 0; }
-  .anim.visible { animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-  .anim-d1 { animation-delay: 0.05s; }
-  .anim-d2 { animation-delay: 0.15s; }
-  .anim-d3 { animation-delay: 0.25s; }
-  .anim-d4 { animation-delay: 0.35s; }
-  .anim-d5 { animation-delay: 0.45s; }
+  /* typewriter cursor blink */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
 
+  .anim { opacity: 0; }
+  .anim.visible { animation: fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .anim-d1 { animation-delay: 0.05s; }
+  .anim-d2 { animation-delay: 0.18s; }
+  .anim-d3 { animation-delay: 0.32s; }
+  .anim-d4 { animation-delay: 0.46s; }
+  .anim-d5 { animation-delay: 0.60s; }
+
+  /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
     background: var(--bg);
@@ -71,51 +79,108 @@
   }
   nav a:hover, nav a.active { color: var(--ink); }
 
-  .hero {
-    width: 100%; height: 420px;
-    position: relative; overflow: hidden;
-    background: var(--bg2);
+  /* ── SPLASH HERO ── */
+  .splash {
+    min-height: 52vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 5rem 1.5rem 4rem;
+    max-width: 740px; margin: 0 auto;
+    border-bottom: 0.5px solid var(--rule);
   }
-  .hero img {
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: center top;
-    display: block;
-    animation: fadeIn 1s ease forwards;
+  .splash h1 {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 400; font-style: italic;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
   }
-  .hero-placeholder {
-    width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 12px;
-    color: var(--muted); font-family: var(--mono); font-size: 12px;
-    letter-spacing: 0.06em; text-transform: uppercase; text-align: center;
-    padding: 2rem;
+  .tagline-wrap {
+    font-family: var(--mono);
+    font-size: clamp(12px, 1.8vw, 14px);
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    min-height: 1.6em;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.7s forwards;
   }
-  .hero-placeholder svg { opacity: 0.25; margin-bottom: 4px; }
-  .hero-overlay {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
-    background: linear-gradient(to bottom, transparent, var(--bg));
+  .tagline-wrap .cursor {
+    display: inline-block;
+    width: 1px; height: 1em;
+    background: var(--muted);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
   }
-
-  .site { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
-
-  .page { display: none; }
-  .page.active { display: block; }
-
-  .home-header { margin-bottom: 3rem; }
-  .home-header h1 { font-size: 2.8rem; font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem; font-style: italic; }
-  .home-header .sub { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .splash-meta {
+    margin-top: 2rem;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--faint); letter-spacing: 0.07em; text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
+  }
   .nsf-badge {
     display: inline-block; font-family: var(--mono); font-size: 11px;
     color: var(--blue-text); background: var(--blue-bg);
-    padding: 4px 10px; border-radius: 3px; letter-spacing: 0.05em; margin-bottom: 1.5rem;
+    padding: 4px 10px; border-radius: 3px; letter-spacing: 0.05em;
+    margin-left: 1rem;
   }
-  .home-bio { font-size: 1.15rem; line-height: 1.8; max-width: 600px; }
+
+  /* ── SITE BODY ── */
+  .site { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HOME BODY ── */
+  .home-photo-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    margin-bottom: 3rem;
+  }
+  @media (max-width: 540px) {
+    .home-photo-row { grid-template-columns: 1fr; }
+    .home-photo-row img, .home-photo-row .photo-placeholder { max-width: 180px; }
+  }
+  .home-photo-row img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 2px;
+    display: block;
+  }
+  .photo-placeholder {
+    width: 100%; aspect-ratio: 3/4;
+    background: var(--bg2);
+    border-radius: 2px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px;
+    color: var(--faint); font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.06em;
+    text-transform: uppercase; text-align: center;
+    padding: 1rem;
+  }
+  .photo-placeholder svg { opacity: 0.25; }
+
+  .home-bio { font-size: 1.15rem; line-height: 1.8; }
   .home-bio p { margin-bottom: 1rem; }
   .home-bio a { color: var(--ink); }
+  .home-bio .bio-name {
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--faint); margin-bottom: 0.8rem;
+  }
 
-  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+  .divider { border: none; border-top: 0.5px solid var(--rule); margin: 2.5rem 0; }
+
+  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
   @media (max-width: 520px) { .home-grid { grid-template-columns: 1fr; } }
-
   .home-block h3 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-bottom: 1rem; }
   .pub-item { margin-bottom: 1.2rem; }
   .pub-item .title { font-size: 1rem; line-height: 1.5; }
@@ -125,6 +190,7 @@
   .contact-line a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
   .contact-line a:hover { color: var(--ink); }
 
+  /* ── SECTION PAGES ── */
   .section-header { margin-bottom: 2.5rem; }
   .section-header h2 { font-size: 2rem; font-weight: 400; font-style: italic; }
 
@@ -174,17 +240,15 @@
   <a onclick="show('cv', this)">CV</a>
 </nav>
 
-<!-- HERO: rename your photo to photo.jpg and put it in the same folder as this file -->
-<div class="hero" id="hero">
-  <img src="photo.jpg" alt="Ethan Rappaport"
-       onerror="this.style.display='none'; document.getElementById('hero-placeholder').style.display='flex';">
-  <div class="hero-overlay"></div>
-  <div class="hero-placeholder" id="hero-placeholder" style="display:none;">
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="22" cy="15" r="8" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M6 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    Rename your photo to photo.jpg and place it in the same folder as this file
+<!-- SPLASH — shown only on home -->
+<div class="splash" id="splash">
+  <h1>Ethan<br>Rappaport</h1>
+  <div class="tagline-wrap">
+    <span id="tagline-text"></span><span class="cursor" id="cursor"></span>
+  </div>
+  <div class="splash-meta">
+    PhD Student &middot; BEES &middot; University of Maryland
+    <span class="nsf-badge">NSF Graduate Research Fellow</span>
   </div>
 </div>
 
@@ -192,16 +256,31 @@
 
   <!-- HOME -->
   <div class="page active" id="home">
-    <div class="home-header">
-      <h1 class="anim anim-d1">Ethan Rappaport</h1>
-      <div class="sub anim anim-d2">PhD Student &middot; BEES &middot; University of Maryland</div>
-      <div class="nsf-badge anim anim-d3">NSF Graduate Research Fellow</div>
-      <div class="home-bio anim anim-d4">
+
+    <div class="home-photo-row anim anim-d1">
+      <!-- Rename your photo to photo.jpg and put it in the same folder -->
+      <div>
+        <img src="photo.jpg" alt="Ethan Rappaport"
+             id="portrait"
+             onerror="this.style.display='none'; document.getElementById('portrait-placeholder').style.display='flex';">
+        <div class="photo-placeholder" id="portrait-placeholder" style="display:none;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="12" r="6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 34c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Place photo.jpg here
+        </div>
+      </div>
+      <div class="home-bio">
+        <div class="bio-name">About</div>
         <p>I'm a mathematical biologist interested in how ecological and evolutionary dynamics shape microbial communities. My work bridges theoretical modeling and computational analysis, with a focus on colonization resistance, consumer-resource dynamics, and host-phage coevolution.</p>
-        <p>I completed my B.S. in Mathematics and Biology at Boston College, where I worked in the Momeni Lab on microbial community ecology. I'm now a PhD student in the BEES program at the University of Maryland.</p>
+        <p>I completed my B.S. in Mathematics and Biology at Boston College, where I worked in the Momeni Lab. I'm now a PhD student in the BEES program at the University of Maryland.</p>
       </div>
     </div>
-    <div class="home-grid anim anim-d5">
+
+    <hr class="divider">
+
+    <div class="home-grid anim anim-d2">
       <div class="home-block">
         <h3>Recent work</h3>
         <div class="pub-item">
@@ -220,6 +299,7 @@
         <div class="contact-line"><span class="label">Location</span>College Park, MD</div>
       </div>
     </div>
+
   </div>
 
   <!-- RESEARCH -->
@@ -228,7 +308,7 @@
     <div class="research-block anim anim-d2">
       <h3>Colonization resistance in microbial communities</h3>
       <div class="meta">Momeni Lab &middot; Boston College &middot; 2023&ndash;2025</div>
-      <p>My undergraduate thesis and first-author publication examined how resource diversity and supply rates shape the ability of resident microbial communities to resist invasion by foreign species. I developed a consumer-resource population model and analyzed how environmental parameters drive bifurcations in invasion outcomes, finding that both resource richness and supply rates are key determinants of colonization resistance.</p>
+      <p>My undergraduate thesis and first-author publication examined how resource diversity and supply rates shape the ability of resident microbial communities to resist invasion. I developed a consumer-resource population model and analyzed how environmental parameters drive bifurcations in invasion outcomes, finding that both resource richness and supply rates are key determinants of colonization resistance.</p>
       <div class="tag-row">
         <span class="tag">consumer-resource models</span>
         <span class="tag">colonization resistance</span>
@@ -250,7 +330,7 @@
     <div class="research-block anim anim-d4">
       <h3>Spatial structure and microbial interactions</h3>
       <div class="meta">Collaborative work &middot; 2025&ndash;2026</div>
-      <p>Contributing author on work examining how spatial structure mediates the outcomes of population interactions in microbial communities, with implications for understanding community assembly and stability in structured environments.</p>
+      <p>Contributing author on work examining how spatial structure mediates the outcomes of population interactions in microbial communities, with implications for community assembly and stability in structured environments.</p>
       <div class="tag-row">
         <span class="tag">spatial ecology</span>
         <span class="tag">community assembly</span>
@@ -267,9 +347,7 @@
       <div class="pub-content">
         <div class="title">Interplay of spatial structure and population interactions in microbial communities</div>
         <div class="authors">Warrier V., Chen Y., <strong>Rappaport E.</strong>, Haruta S., Youk H., Momeni B.</div>
-        <div class="venue">Environmental Microbiology
-          <!-- <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
-        </div>
+        <div class="venue">Environmental Microbiology</div>
       </div>
     </div>
     <div class="pub-entry anim anim-d3">
@@ -277,9 +355,7 @@
       <div class="pub-content">
         <div class="title">Resource diversity and supply drive colonization resistance</div>
         <div class="authors"><strong>Rappaport E.</strong>, Mirollo R., Momeni B.</div>
-        <div class="venue">PLoS Computational Biology
-          <!-- <a class="pub-link" href="https://doi.org/YOUR_DOI">DOI</a> -->
-        </div>
+        <div class="venue">PLoS Computational Biology</div>
       </div>
     </div>
     <div class="pub-entry anim anim-d4">
@@ -349,7 +425,7 @@
         <div class="cv-body">
           <div class="role">Math Instructor</div>
           <div class="place">Summer Scholars Program, Friends' Central School</div>
-          <div class="desc">Taught introductory geometry to rising high school freshmen; developed full curriculum and managed coursework through Canvas.</div>
+          <div class="desc">Taught introductory geometry to rising high school freshmen; developed full curriculum through Canvas.</div>
         </div>
       </div>
     </div>
@@ -366,11 +442,33 @@
 </div>
 
 <script>
+  /* ── TAGLINE TYPEWRITER ── */
+  var tagline = "Connecting mathematics and microbial evolution.";
+  var tEl = document.getElementById('tagline-text');
+  var cur = document.getElementById('cursor');
+  var i = 0;
+
+  function type() {
+    if (i <= tagline.length) {
+      tEl.textContent = tagline.slice(0, i);
+      i++;
+      setTimeout(type, i === 1 ? 400 : 38 + Math.random() * 22);
+    } else {
+      // hide cursor after done
+      setTimeout(function() { cur.style.display = 'none'; }, 2000);
+    }
+  }
+  setTimeout(type, 900);
+
+  /* ── PAGE SWITCHING ── */
+  var splash = document.getElementById('splash');
+
   function show(id, el) {
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
     document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
     el.classList.add('active');
+    splash.style.display = id === 'home' ? '' : 'none';
     window.scrollTo(0, 0);
     triggerAnims();
   }
