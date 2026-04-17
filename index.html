@@ -6,150 +6,128 @@
 <title>Ethan Rappaport</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Latin+Modern+Roman:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #e8e6df;
-  --bg2:      #dddbd3;
-  --ink:      #2d4a2d;
-  --ink2:     #3d5e3d;
-  --muted:    #5a7a5a;
-  --faint:    #7a9a7a;
-  --rule:     rgba(45,74,45,0.18);
-  --serif:    'Latin Modern Roman', 'EB Garamond', Georgia, serif;
-  --mono:     'Courier New', Courier, monospace;
+  --bg:    #e8e6df;
+  --bg2:   #dddbd3;
+  --ink:   #2d4a2d;
+  --ink2:  #3d5e3d;
+  --muted: #5a7a5a;
+  --faint: #7a9a7a;
+  --rule:  rgba(45,74,45,0.18);
+  --serif: 'Crimson Pro', Georgia, serif;
+  --mono:  'Courier New', Courier, monospace;
 }
 
 html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
 body { min-height: 100vh; }
 
-/* ── KEYFRAMES ── */
-@keyframes fadeUp   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
-@keyframes blink    { 0%,100% { opacity:1; } 50% { opacity:0; } }
-@keyframes birdFly1 {
-  0%   { transform: translate(0,0) scaleX(1); opacity:1; }
-  100% { transform: translate(120px,-90px) scaleX(1); opacity:0; }
+@keyframes fadeUp  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+/* Bird flight paths */
+@keyframes bird1 {
+  0%   { transform: translate(0px,0px) scale(1);   opacity:1; }
+  100% { transform: translate(140px,-100px) scale(0.7); opacity:0; }
 }
-@keyframes birdFly2 {
-  0%   { transform: translate(0,0) scaleX(-1); opacity:1; }
-  100% { transform: translate(-80px,-110px) scaleX(-1); opacity:0; }
+@keyframes bird2 {
+  0%   { transform: translate(0px,0px) scale(1);   opacity:1; }
+  100% { transform: translate(90px,-130px) scale(0.6); opacity:0; }
 }
 
 .anim { opacity:0; }
 .anim.visible { animation: fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
-.anim-d1 { animation-delay:0.05s; }
-.anim-d2 { animation-delay:0.18s; }
-.anim-d3 { animation-delay:0.30s; }
-.anim-d4 { animation-delay:0.42s; }
-.anim-d5 { animation-delay:0.54s; }
+.anim-d1{animation-delay:.05s;} .anim-d2{animation-delay:.18s;}
+.anim-d3{animation-delay:.30s;} .anim-d4{animation-delay:.42s;}
+.anim-d5{animation-delay:.54s;}
 
-/* ── NAV ── */
+/* NAV */
 nav {
-  position: fixed; top:0; left:0; right:0; z-index:200;
-  background: var(--bg);
-  border-bottom: 0.5px solid var(--rule);
-  display: flex; gap:2.5rem;
-  padding: 0.9rem 2rem;
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  background:var(--bg); border-bottom:0.5px solid var(--rule);
+  display:flex; gap:2.5rem; padding:0.9rem 2rem;
 }
 nav a {
-  font-family: var(--mono); font-size:11px; color:var(--muted);
-  text-decoration:none; letter-spacing:0.1em;
-  text-transform:uppercase; background:none; border:none; padding:0;
-  cursor:pointer; transition:color 0.2s;
+  font-family:var(--mono); font-size:11px; color:var(--muted);
+  text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;
+  background:none; border:none; padding:0; cursor:pointer; transition:color 0.2s;
 }
 nav a:hover, nav a.active { color:var(--ink); }
 
-/* ── SPLASH ── */
+/* SPLASH */
 .splash {
-  min-height: 100vh;
-  display: flex; flex-direction:column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: 6rem 2rem 4rem;
-  position: relative;
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:6rem 2rem 5rem; position:relative;
 }
 
+/* Title row: name left, tree SVG overlapping right */
 .splash-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1.4rem;
-  position: relative;
+  position:relative;
+  display:inline-block; /* shrink-wrap to content */
+  margin-bottom:1.6rem;
 }
 
-/* NAME */
-.name-wrap {
-  position: relative;
-  display: inline-block;
-  cursor: default;
-}
 #name-display {
-  font-family: var(--serif);
-  font-size: clamp(3.2rem, 9vw, 6.5rem);
-  font-weight: 400;
-  /* font-style: italic; */
-  letter-spacing: -0.01em;
-  line-height: 1;
-  color: var(--ink);
-  white-space: nowrap;
-  opacity: 0;
-  animation: fadeIn 0.3s ease 0.2s forwards;
+  font-family:var(--serif);
+  font-size: clamp(3rem, 9vw, 6.2rem);
+  font-weight:400; font-style:italic;
+  letter-spacing:-0.01em; line-height:1;
+  color:var(--ink); white-space:nowrap;
+  position:relative; z-index:2;
+  opacity:0; animation:fadeIn 0.3s ease 0.2s forwards;
 }
 
-/* BIRDS */
-.birds-wrap {
-  position: absolute;
-  top: 0; left: 0;
-  pointer-events: none;
-  width: 100%; height: 100%;
-}
-.bird {
-  position: absolute;
-  opacity: 0;
-  fill: var(--ink);
-}
-.bird.fly1 { animation: birdFly1 1.4s cubic-bezier(0.2,0,0.8,1) forwards; }
-.bird.fly2 { animation: birdFly2 1.6s cubic-bezier(0.2,0,0.8,1) 0.15s forwards; }
-
-/* TREE */
-.tree-wrap {
-  flex-shrink: 0;
-  opacity: 0;
-  animation: fadeIn 1s ease 2.8s forwards;
+/* Tree SVG — absolutely positioned to right of name */
+#tree-svg {
+  position:absolute;
+  right:-60px; bottom:-10px;
+  z-index:1;
+  pointer-events:none;
+  overflow:visible;
 }
 
-/* TAGLINE */
+/* All tree paths start invisible; JS drives stroke-dashoffset grow */
+#tree-svg path, #tree-svg line {
+  fill:none;
+  stroke:#2d4a2d;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* Birds container — lives inside title row, absolute */
+#birds-wrap {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:10;
+  overflow:visible;
+}
+.bird-svg { position:absolute; opacity:0; }
+.bird-svg.fly1 { animation: bird1 1.5s cubic-bezier(0.2,0,0.6,1) forwards; }
+.bird-svg.fly2 { animation: bird2 1.8s cubic-bezier(0.2,0,0.6,1) 0.2s forwards; }
+
+/* Tagline */
 .tagline-wrap {
-  font-family: var(--mono);
-  font-size: clamp(11px,1.6vw,14px);
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  min-height: 1.5em;
-  opacity: 0;
-  animation: fadeIn 0.5s ease 0.8s forwards;
-  margin-bottom: 2.5rem;
+  font-family:var(--mono); font-size:clamp(11px,1.6vw,14px);
+  letter-spacing:0.06em; color:var(--muted);
+  min-height:1.5em; margin-bottom:2.5rem;
 }
 .cursor {
-  display: inline-block; width:1px; height:1em;
-  background: var(--muted);
-  margin-left:2px; vertical-align:text-bottom;
-  animation: blink 1s step-end infinite;
+  display:inline-block; width:1px; height:1em;
+  background:var(--muted); margin-left:2px; vertical-align:text-bottom;
+  animation:blink 1s step-end infinite;
 }
 
 .splash-meta {
-  font-family: var(--mono); font-size:11px;
-  color: var(--faint); letter-spacing:0.1em; text-transform:uppercase;
-  opacity:0; animation: fadeIn 0.6s ease 2.2s forwards;
-  margin-bottom: 1.2rem;
+  font-family:var(--mono); font-size:11px; color:var(--faint);
+  letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.2rem;
 }
 .nsf-badge {
   display:inline-block; font-family:var(--mono); font-size:11px;
-  color: var(--ink); background: var(--bg2);
-  border: 0.5px solid var(--rule);
+  color:var(--ink); background:var(--bg2); border:0.5px solid var(--rule);
   padding:4px 10px; border-radius:2px; letter-spacing:0.05em; margin-left:1rem;
 }
 
@@ -157,24 +135,23 @@ nav a:hover, nav a.active { color:var(--ink); }
   position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
   font-family:var(--mono); font-size:10px; letter-spacing:0.12em;
   text-transform:uppercase; color:var(--faint);
-  opacity:0; animation:fadeIn 0.8s ease 3.2s forwards;
   display:flex; flex-direction:column; align-items:center; gap:6px;
+  opacity:0;
 }
-.scroll-hint svg { opacity:0.5; }
 
-/* ── SITE BODY ── */
+/* SITE */
 .site { max-width:720px; margin:0 auto; padding:4rem 1.5rem 6rem; }
 .page { display:none; }
 .page.active { display:block; }
 
-/* ── HOME ── */
+/* HOME */
 .home-photo-row {
   display:grid; grid-template-columns:190px 1fr; gap:2.5rem;
   align-items:start; margin-bottom:3rem;
 }
-@media(max-width:540px) {
-  .home-photo-row { grid-template-columns:1fr; }
-  .home-photo-row img, .photo-placeholder { max-width:160px; }
+@media(max-width:540px){
+  .home-photo-row{grid-template-columns:1fr;}
+  .home-photo-row img,.photo-placeholder{max-width:160px;}
 }
 .home-photo-row img {
   width:100%; aspect-ratio:3/4; object-fit:cover; object-position:center top;
@@ -193,7 +170,7 @@ nav a:hover, nav a.active { color:var(--ink); }
 .bio-label { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--faint); margin-bottom:0.7rem; }
 hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 .home-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
-@media(max-width:520px) { .home-grid { grid-template-columns:1fr; } }
+@media(max-width:520px){.home-grid{grid-template-columns:1fr;}}
 .home-block h3 { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--faint); margin-bottom:1rem; }
 .pub-item { margin-bottom:1.2rem; }
 .pub-item .title { font-size:1rem; line-height:1.5; color:var(--ink); }
@@ -203,7 +180,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 .contact-line a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
 .contact-line a:hover { color:var(--ink); }
 
-/* ── OTHER PAGES ── */
+/* SECTION PAGES */
 .section-header { margin-bottom:2.5rem; }
 .section-header h2 { font-size:2.2rem; font-weight:400; font-style:italic; color:var(--ink); }
 .research-block { margin-bottom:2.5rem; padding-bottom:2.5rem; border-bottom:0.5px solid var(--rule); }
@@ -214,18 +191,16 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 .tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:0.8rem; }
 .tag { font-family:var(--mono); font-size:10px; letter-spacing:0.05em; padding:3px 8px; border-radius:2px; background:var(--bg2); color:var(--faint); border:0.5px solid var(--rule); }
 .pub-entry { display:grid; grid-template-columns:48px 1fr; gap:1rem; margin-bottom:2rem; padding-bottom:2rem; border-bottom:0.5px solid var(--rule); }
-.pub-entry:last-child { border-bottom:none; }
+.pub-entry:last-child{border-bottom:none;}
 .pub-year { font-family:var(--mono); font-size:11px; color:var(--faint); padding-top:4px; }
 .pub-content .title { font-size:1.05rem; line-height:1.5; margin-bottom:0.3rem; color:var(--ink); }
 .pub-content .authors { font-size:0.9rem; color:var(--muted); margin-bottom:0.25rem; }
 .pub-content .authors strong { color:var(--ink); font-weight:400; }
 .pub-content .venue { font-family:var(--mono); font-size:11px; color:var(--muted); }
-.pub-link { font-family:var(--mono); font-size:11px; color:var(--ink); text-decoration:none; margin-left:10px; }
-.pub-link:hover { text-decoration:underline; }
 .cv-section { margin-bottom:2.5rem; }
 .cv-section h3 { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--faint); border-bottom:0.5px solid var(--rule); padding-bottom:0.5rem; margin-bottom:1.2rem; }
 .cv-entry { display:grid; grid-template-columns:110px 1fr; gap:1rem; margin-bottom:1.2rem; }
-@media(max-width:480px) { .cv-entry { grid-template-columns:1fr; gap:0.2rem; } }
+@media(max-width:480px){.cv-entry{grid-template-columns:1fr; gap:0.2rem;}}
 .cv-date { font-family:var(--mono); font-size:11px; color:var(--faint); padding-top:3px; }
 .cv-body .role { font-size:1rem; color:var(--ink); }
 .cv-body .place { font-size:0.9rem; color:var(--muted); font-style:italic; margin-top:1px; }
@@ -235,6 +210,25 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 .award-year { font-family:var(--mono); font-size:11px; color:var(--faint); }
 .skills-block { font-size:0.95rem; line-height:2.1; color:var(--ink2); }
 .skills-block span.label { color:var(--ink); font-weight:600; }
+
+/* TEACHING PAGE */
+.teaching-intro {
+  font-size:1.12rem; line-height:1.85; color:var(--ink2);
+  max-width:640px; margin-bottom:2.5rem;
+}
+.teaching-block { margin-bottom:2.5rem; padding-bottom:2.5rem; border-bottom:0.5px solid var(--rule); }
+.teaching-block:last-child { border-bottom:none; }
+.teaching-block h3 { font-size:1.2rem; font-weight:600; margin-bottom:0.3rem; color:var(--ink); }
+.teaching-block .meta { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:0.05em; margin-bottom:0.8rem; }
+.teaching-block p { font-size:1rem; line-height:1.8; color:var(--ink2); margin-bottom:0.6rem; }
+.teaching-block p:last-child { margin-bottom:0; }
+.philosophy-block {
+  background:var(--bg2); border:0.5px solid var(--rule);
+  border-radius:2px; padding:1.4rem 1.6rem; margin-top:2.5rem;
+}
+.philosophy-block h3 { font-size:1rem; font-family:var(--mono); text-transform:uppercase; letter-spacing:0.1em; color:var(--faint); margin-bottom:1rem; }
+.philosophy-block p { font-size:1rem; line-height:1.85; color:var(--ink2); margin-bottom:0.7rem; }
+.philosophy-block p:last-child { margin-bottom:0; }
 </style>
 </head>
 <body>
@@ -243,31 +237,68 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
   <a class="active" onclick="show('home',this)">Home</a>
   <a onclick="show('research',this)">Research</a>
   <a onclick="show('publications',this)">Publications</a>
+  <a onclick="show('teaching',this)">Teaching</a>
   <a onclick="show('cv',this)">CV</a>
 </nav>
 
-<!-- ══ SPLASH ══ -->
+<!-- SPLASH -->
 <div class="splash" id="splash">
 
-  <div class="splash-title-row">
+  <div class="splash-title-row" id="title-row">
 
-    <!-- TREE SVG -->
-    <div class="tree-wrap" id="tree-wrap">
-      <svg width="72" height="130" viewBox="0 0 72 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- trunk -->
-        <rect x="32" y="90" width="8" height="38" fill="#2d4a2d"/>
-        <!-- canopy layers -->
-        <polygon points="36,10 62,60 10,60" fill="#2d4a2d"/>
-        <polygon points="36,28 66,75 6,75" fill="#2d4a2d"/>
-        <polygon points="36,46 68,92 4,92" fill="#2d4a2d"/>
-      </svg>
-    </div>
+    <div id="name-display"></div>
 
-    <!-- NAME + BIRDS -->
-    <div class="name-wrap" id="name-wrap">
-      <div id="name-display"></div>
-      <div class="birds-wrap" id="birds-wrap"></div>
-    </div>
+    <!-- Detailed branching tree — trunk base anchored bottom-right of name -->
+    <!-- viewBox designed so (0,200) is trunk base; tree grows upward and branches out -->
+    <svg id="tree-svg" width="120" height="220" viewBox="-10 -10 120 230">
+
+      <!-- TRUNK -->
+      <path id="tr-trunk" d="M55,220 C54,190 53,160 52,130" stroke-width="5"/>
+
+      <!-- MAIN LEFT BRANCH from ~y130 -->
+      <path id="tr-bl1" d="M52,130 C40,118 20,110 5,100" stroke-width="3.5"/>
+      <!-- sub-branches left -->
+      <path id="tr-bl1a" d="M30,116 C24,105 18,95 10,85" stroke-width="2"/>
+      <path id="tr-bl1b" d="M18,108 C14,98 12,88 14,76" stroke-width="1.5"/>
+      <path id="tr-bl1c" d="M5,100 C0,90 -2,78 2,66" stroke-width="1.5"/>
+      <path id="tr-bl1d" d="M10,85 C6,74 8,62 14,52" stroke-width="1.2"/>
+
+      <!-- MAIN RIGHT BRANCH from ~y130 -->
+      <path id="tr-br1" d="M52,130 C65,115 80,105 98,95" stroke-width="3.5"/>
+      <!-- sub-branches right -->
+      <path id="tr-br1a" d="M72,112 C78,100 84,88 88,75" stroke-width="2"/>
+      <path id="tr-br1b" d="M85,100 C90,88 95,76 98,62" stroke-width="1.5"/>
+      <path id="tr-br1c" d="M98,95 C104,83 106,70 102,57" stroke-width="1.5"/>
+      <path id="tr-br1d" d="M88,75 C94,63 98,50 96,38" stroke-width="1.2"/>
+
+      <!-- UPPER LEFT BRANCH from ~y90 -->
+      <path id="tr-bl2" d="M52,90 C38,78 22,68 8,55" stroke-width="2.5"/>
+      <path id="tr-bl2a" d="M30,76 C22,64 16,52 18,38" stroke-width="1.5"/>
+      <path id="tr-bl2b" d="M8,55 C2,43 2,30 8,18" stroke-width="1.2"/>
+      <path id="tr-bl2c" d="M18,38 C14,26 16,14 22,4" stroke-width="1"/>
+
+      <!-- UPPER RIGHT BRANCH from ~y90 -->
+      <path id="tr-br2" d="M52,90 C66,76 82,64 96,50" stroke-width="2.5"/>
+      <path id="tr-br2a" d="M72,74 C80,62 86,48 84,34" stroke-width="1.5"/>
+      <path id="tr-br2b" d="M96,50 C102,37 102,24 96,12" stroke-width="1.2"/>
+      <path id="tr-br2c" d="M84,34 C88,22 88,10 82,0" stroke-width="1"/>
+
+      <!-- TOP BRANCH from ~y60 -->
+      <path id="tr-top" d="M52,60 C52,45 50,30 48,15" stroke-width="2"/>
+      <path id="tr-topa" d="M48,15 C44,5 38,-2 30,-5" stroke-width="1.2"/>
+      <path id="tr-topb" d="M48,15 C52,5 58,-2 66,-4" stroke-width="1.2"/>
+
+      <!-- tiny terminal twigs -->
+      <path id="tr-tw1" d="M14,52 C10,44 8,36 10,28" stroke-width="0.8"/>
+      <path id="tr-tw2" d="M2,66 C-2,56 -2,46 4,36" stroke-width="0.8"/>
+      <path id="tr-tw3" d="M96,38 C100,28 100,18 94,10" stroke-width="0.8"/>
+      <path id="tr-tw4" d="M102,57 C108,46 108,34 102,24" stroke-width="0.8"/>
+      <path id="tr-tw5" d="M22,4 C18,-6 20,-16 28,-20" stroke-width="0.8"/>
+      <path id="tr-tw6" d="M82,0 C86,-10 84,-20 76,-24" stroke-width="0.8"/>
+    </svg>
+
+    <!-- Birds live here, absolutely inside title-row -->
+    <div id="birds-wrap"></div>
 
   </div>
 
@@ -275,12 +306,12 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     <span id="tagline-text"></span><span class="cursor" id="cursor"></span>
   </div>
 
-  <div class="splash-meta">
+  <div class="splash-meta" id="splash-meta" style="opacity:0;">
     PhD Student &middot; BEES &middot; University of Maryland
     <span class="nsf-badge">NSF Graduate Research Fellow</span>
   </div>
 
-  <div class="scroll-hint">
+  <div class="scroll-hint" id="scroll-hint">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
       <path d="M7 2v10M3 8l4 4 4-4" stroke="#5a7a5a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -289,8 +320,8 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 
 </div>
 
-<!-- ══ SITE BODY ══ -->
-<div class="site" id="site-body">
+<!-- SITE BODY -->
+<div class="site">
 
   <!-- HOME -->
   <div class="page active" id="home">
@@ -394,6 +425,42 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     </div>
   </div>
 
+  <!-- TEACHING -->
+  <div class="page" id="teaching">
+    <div class="section-header anim anim-d1"><h2>Teaching</h2></div>
+
+    <p class="teaching-intro anim anim-d2">
+      My approach to teaching grew directly out of my experience making mathematical biology accessible to broad audiences — a skill sharpened by years of explaining consumer-resource dynamics and invasion theory to collaborators across disciplines. I prioritize building intuition before formalism, and I adapt explanations to the learner's background rather than assuming a fixed entry point.
+    </p>
+
+    <div class="teaching-block anim anim-d2">
+      <h3>Tutor and Grader</h3>
+      <div class="meta">Department of Mathematics, Boston College &middot; 2022&ndash;2025</div>
+      <p>Staffed drop-in hours at the Math Learning Center, supporting students across courses ranging from introductory calculus through linear algebra, probability, and proof-writing. Working with students from diverse majors and preparation levels developed my ability to rapidly diagnose conceptual gaps and offer multiple explanatory framings of the same idea.</p>
+      <p>Also held private sessions with secondary students in algebra and precalculus, giving me experience calibrating explanations for learners at early stages of mathematical development — a skill directly relevant to broadening access to quantitative methods in biology.</p>
+    </div>
+
+    <div class="teaching-block anim anim-d3">
+      <h3>Math Instructor — Tricky Topics in Geometry</h3>
+      <div class="meta">Summer Scholars Program, Friends' Central School &middot; 2021</div>
+      <p>Designed and delivered a preparatory geometry course for incoming high school students during COVID-19 restrictions. I built the curriculum from scratch, covering triangle similarity and congruence, area and volume, and introductory trigonometry. All instruction was conducted asynchronously via recorded lectures supplemented by daily live Zoom sessions.</p>
+      <p>This experience taught me that asynchronous formats demand unusually clear exposition — every ambiguity that a live instructor could catch in real time must instead be anticipated and resolved in the material itself. It also demonstrated the value of accessible digital tools for maintaining engagement and checking comprehension at a distance.</p>
+    </div>
+
+    <div class="teaching-block anim anim-d4">
+      <h3>Science Communication and Seminar Presentation</h3>
+      <div class="meta">Boston College &middot; University of Maryland &middot; 2023&ndash;present</div>
+      <p>A recurring challenge in presenting mathematical biology is that equations cause many audiences — including scientists in adjacent fields — to disengage. I have developed seminar presentations for venues ranging from interdisciplinary biology symposia (Harvard Microbial Science Initiative, M3 Mid-Atlantic Microbiome Meet-up) to physics and data science audiences, consistently adapting technical depth and framing to the room.</p>
+      <p>This practice of translating between mathematical formalism and biological narrative is, I believe, central to effective graduate-level instruction in quantitative life sciences.</p>
+    </div>
+
+    <div class="philosophy-block anim anim-d5">
+      <h3>Teaching philosophy</h3>
+      <p>I believe quantitative reasoning is learnable by anyone willing to engage with it patiently — the bottleneck is almost never ability, but confidence and prior exposure. In my teaching I lead with geometric and biological intuition, only then layering in the formal machinery. I treat the moment when a student says "I've never thought of it that way" as the actual goal, not a byproduct.</p>
+      <p>I am particularly interested in developing pedagogical approaches that reduce the activation barrier for biology students encountering mathematical modeling for the first time — drawing on my own experience constructing models that needed to be legible to microbiologists, mathematicians, and physicists simultaneously.</p>
+    </div>
+  </div>
+
   <!-- CV -->
   <div class="page" id="cv">
     <div class="section-header anim anim-d1"><h2>Curriculum vitae</h2></div>
@@ -432,7 +499,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
         <div class="cv-body">
           <div class="role">Undergraduate Researcher</div>
           <div class="place">Momeni Lab, Boston College</div>
-          <div class="desc">Independent study in microbial community ecology; produced first-author publication, honors thesis, and contributed to collaborative review article. Presented at external venues including Harvard's Microbial Science Initiative Symposium and the M3 Mid-Atlantic Microbiome Meet-up.</div>
+          <div class="desc">Independent study in microbial community ecology; first-author publication, honors thesis, and contribution to collaborative review article. Presented at external venues including Harvard's Microbial Science Initiative Symposium and the M3 Mid-Atlantic Microbiome Meet-up.</div>
         </div>
       </div>
     </div>
@@ -443,7 +510,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
         <div class="cv-body">
           <div class="role">Tutor and Grader</div>
           <div class="place">Department of Mathematics, Boston College</div>
-          <div class="desc">Tutored students in calculus, linear algebra, statistics, and proof writing.</div>
+          <div class="desc">Drop-in and private tutoring in calculus, linear algebra, statistics, and proof writing across diverse student backgrounds.</div>
         </div>
       </div>
       <div class="cv-entry">
@@ -451,7 +518,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
         <div class="cv-body">
           <div class="role">Math Instructor</div>
           <div class="place">Summer Scholars Program, Friends' Central School</div>
-          <div class="desc">Taught introductory geometry to rising high school freshmen; developed full curriculum through Canvas.</div>
+          <div class="desc">Designed and delivered preparatory geometry curriculum for incoming high school students; asynchronous and synchronous instruction via Canvas and Zoom.</div>
         </div>
       </div>
     </div>
@@ -468,150 +535,191 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 </div><!-- /site -->
 
 <script>
-/* ══════════════════════════════════════════
-   NAME ANIMATION: greek/math → real letters
-   ══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   MASTER SEQUENCE — everything chains off a timeline
+   ═══════════════════════════════════════════════════
+
+   t=0       name appears (symbols)
+   t=600ms   name starts resolving
+   t=600+~1400ms  name fully resolved → start tree grow
+   t=tree done (~2200ms from start) → type tagline
+   t=tagline done → fade in meta + scroll hint
+   t=meta visible → birds fly
+*/
+
+var INK = '#2d4a2d';
+
+/* ── 1. NAME ANIMATION ── */
 var targetName = "Ethan Rappaport";
-
-// Map each letter to a starting greek/math symbol
-var greekMap = {
-  'E':'Σ','t':'τ','h':'η','a':'α','n':'ν',
-  ' ':' ',
-  'R':'Ρ','p':'ρ','o':'ω','r':'π','s':'ς'
-};
+var greekMap = {'E':'Σ','t':'τ','h':'η','a':'α','n':'ν',' ':' ','R':'Ρ','p':'ρ','o':'ω','r':'π','s':'ς'};
 var mathPool = ['∂','∫','∇','Δ','λ','μ','φ','ψ','ξ','Ω','β','γ','δ','ε','ζ','θ','κ','Λ','Ξ','Π','Σ','Φ','Ψ'];
+function startSym(c){ return c===' ' ? ' ' : (greekMap[c]||mathPool[Math.floor(Math.random()*mathPool.length)]); }
 
-function startSymbol(c) {
-  if (c === ' ') return ' ';
-  return greekMap[c] || mathPool[Math.floor(Math.random()*mathPool.length)];
-}
+var nameEl   = document.getElementById('name-display');
+var letters  = targetName.split('');
+var state    = letters.map(startSym);
+var resolved = letters.map(function(){ return false; });
 
-var nameEl = document.getElementById('name-display');
-var letters = targetName.split('');
-// Build initial state: all symbols
-var state = letters.map(function(c){ return startSymbol(c); });
-var resolved = letters.map(function(c){ return false; });
-
-function renderName() {
-  nameEl.textContent = state.join('');
-}
-
-// Resolve letters one by one, randomly, with slight scramble of unresolved
-function resolveStep() {
-  // find unresolved indices
-  var pending = [];
-  for (var i=0;i<resolved.length;i++) { if (!resolved[i]) pending.push(i); }
-  if (pending.length === 0) return;
-
-  // pick a random unresolved index to resolve
-  var pick = pending[Math.floor(Math.random()*pending.length)];
-  resolved[pick] = true;
-  state[pick] = letters[pick];
-
-  // lightly scramble remaining unresolved
-  for (var j=0;j<pending.length;j++) {
-    var idx = pending[j];
-    if (idx !== pick && Math.random() < 0.4) {
-      state[idx] = letters[idx] === ' ' ? ' ' : mathPool[Math.floor(Math.random()*mathPool.length)];
-    }
-  }
-
-  renderName();
-  var delay = 80 + Math.random()*140;
-  if (pending.length > 1) setTimeout(resolveStep, delay);
-}
-
-// Start: render symbols immediately, begin resolving after brief pause
+function renderName(){ nameEl.textContent = state.join(''); }
 renderName();
-setTimeout(resolveStep, 600);
 
-
-/* ══════════════════════════════════════════
-   TAGLINE TYPEWRITER
-   ══════════════════════════════════════════ */
-var tagline = "Connecting mathematics and microbial evolution.";
-var tEl  = document.getElementById('tagline-text');
-var cEl  = document.getElementById('cursor');
-var ti   = 0;
-
-function typeTagline() {
-  if (ti <= tagline.length) {
-    tEl.textContent = tagline.slice(0,ti);
-    ti++;
-    setTimeout(typeTagline, ti===1 ? 300 : 36+Math.random()*20);
-  } else {
-    setTimeout(function(){ cEl.style.display='none'; }, 2000);
+var nameResolveDone; // promise-like: callback set by caller
+function resolveStep(){
+  var pending = [];
+  for(var i=0;i<resolved.length;i++){ if(!resolved[i]) pending.push(i); }
+  if(pending.length===0){ if(nameResolveDone) nameResolveDone(); return; }
+  var pick = pending[Math.floor(Math.random()*pending.length)];
+  resolved[pick]=true; state[pick]=letters[pick];
+  for(var j=0;j<pending.length;j++){
+    var idx=pending[j];
+    if(idx!==pick && Math.random()<0.4)
+      state[idx]=letters[idx]===' '?' ':mathPool[Math.floor(Math.random()*mathPool.length)];
   }
-}
-setTimeout(typeTagline, 1100);
-
-
-/* ══════════════════════════════════════════
-   BIRD HOVER (first time only)
-   ══════════════════════════════════════════ */
-var birdsTriggered = false;
-
-function spawnBirds() {
-  if (birdsTriggered) return;
-  birdsTriggered = true;
-
-  var wrap = document.getElementById('birds-wrap');
-  var nameBox = document.getElementById('name-display').getBoundingClientRect();
-  var wrapBox = wrap.getBoundingClientRect();
-
-  // Bird SVG path — simple angular gull silhouette
-  var birdPath = "M0,-4 C-3,-7 -10,-5 -14,-2 C-10,-4 -5,-3 0,0 C5,-3 10,-4 14,-2 C10,-5 3,-7 0,-4Z";
-
-  // Bird 1 — launches right from upper canopy area
-  var b1 = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  b1.setAttribute('width','28'); b1.setAttribute('height','28');
-  b1.setAttribute('viewBox','-16 -12 32 24');
-  b1.style.cssText = 'position:absolute;top:10%;left:55%;fill:#2d4a2d;';
-  var p1 = document.createElementNS('http://www.w3.org/2000/svg','path');
-  p1.setAttribute('d', birdPath);
-  b1.appendChild(p1);
-  b1.classList.add('bird','fly1');
-  wrap.appendChild(b1);
-
-  // Bird 2 — launches left
-  var b2 = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  b2.setAttribute('width','24'); b2.setAttribute('height','24');
-  b2.setAttribute('viewBox','-16 -12 32 24');
-  b2.style.cssText = 'position:absolute;top:20%;left:35%;fill:#2d4a2d;';
-  var p2 = document.createElementNS('http://www.w3.org/2000/svg','path');
-  p2.setAttribute('d', birdPath);
-  b2.appendChild(p2);
-  b2.classList.add('bird','fly2');
-  wrap.appendChild(b2);
+  renderName();
+  if(pending.length>1) setTimeout(resolveStep, 80+Math.random()*130);
+  else { if(nameResolveDone) nameResolveDone(); }
 }
 
-document.getElementById('name-wrap').addEventListener('mouseenter', spawnBirds);
+/* ── 2. TREE GROW ── */
+/* Measure each path's total length, then animate dashoffset 0→len */
+var treePathIds = [
+  'tr-trunk',
+  'tr-bl1','tr-bl1a','tr-bl1b','tr-bl1c','tr-bl1d',
+  'tr-br1','tr-br1a','tr-br1b','tr-br1c','tr-br1d',
+  'tr-bl2','tr-bl2a','tr-bl2b','tr-bl2c',
+  'tr-br2','tr-br2a','tr-br2b','tr-br2c',
+  'tr-top','tr-topa','tr-topb',
+  'tr-tw1','tr-tw2','tr-tw3','tr-tw4','tr-tw5','tr-tw6'
+];
 
+/* Growth order: trunk first, then main branches, then sub-branches, then twigs */
+var growGroups = [
+  ['tr-trunk'],
+  ['tr-bl1','tr-br1'],
+  ['tr-bl2','tr-br2'],
+  ['tr-bl1a','tr-br1a','tr-bl2a','tr-br2a','tr-top'],
+  ['tr-bl1b','tr-br1b','tr-bl2b','tr-br2b','tr-topa','tr-topb'],
+  ['tr-bl1c','tr-br1c','tr-bl2c','tr-br2c'],
+  ['tr-bl1d','tr-br1d'],
+  ['tr-tw1','tr-tw2','tr-tw3','tr-tw4','tr-tw5','tr-tw6']
+];
 
-/* ══════════════════════════════════════════
-   PAGE SWITCHING
-   ══════════════════════════════════════════ */
-var splash = document.getElementById('splash');
-
-function show(id, el) {
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('nav a').forEach(function(a){ a.classList.remove('active'); });
-  document.getElementById(id).classList.add('active');
-  el.classList.add('active');
-  splash.style.display = id==='home' ? '' : 'none';
-  window.scrollTo(0,0);
-  triggerAnims();
-}
-
-function triggerAnims() {
-  document.querySelectorAll('.page.active .anim').forEach(function(el){
-    el.classList.remove('visible');
-    void el.offsetWidth;
-    el.classList.add('visible');
+function initTreePaths(){
+  treePathIds.forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    var len=el.getTotalLength();
+    el.style.strokeDasharray=len;
+    el.style.strokeDashoffset=len; /* hidden */
+    el.style.transition='none';
   });
 }
 
-window.addEventListener('load', triggerAnims);
+function growGroup(ids, duration, callback){
+  ids.forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.style.transition='stroke-dashoffset '+duration+'ms cubic-bezier(0.4,0,0.2,1)';
+    el.style.strokeDashoffset='0';
+  });
+  setTimeout(callback, duration);
+}
+
+function growTree(onDone){
+  var groupDuration = 280;
+  var delay = 0;
+  growGroups.forEach(function(group, gi){
+    setTimeout(function(){
+      growGroup(group, groupDuration, function(){
+        if(gi===growGroups.length-1 && onDone) onDone();
+      });
+    }, delay);
+    delay += groupDuration * 0.75;
+  });
+}
+
+/* ── 3. TAGLINE ── */
+var tagline = "Connecting mathematics and microbial evolution.";
+var tEl=document.getElementById('tagline-text');
+var cEl=document.getElementById('cursor');
+var ti=0;
+function typeTagline(onDone){
+  if(ti<=tagline.length){
+    tEl.textContent=tagline.slice(0,ti); ti++;
+    setTimeout(function(){ typeTagline(onDone); }, ti===1?80:34+Math.random()*18);
+  } else {
+    setTimeout(function(){ cEl.style.display='none'; if(onDone) onDone(); }, 1800);
+  }
+}
+
+/* ── 4. BIRDS ── */
+var birdPath = "M0,-5 C-4,-9 -13,-7 -18,-3 C-13,-5 -6,-4 0,0 C6,-4 13,-5 18,-3 C13,-7 4,-9 0,-5Z";
+
+function spawnBirds(){
+  var wrap = document.getElementById('birds-wrap');
+
+  function makeBird(cls, topPct, leftPct, size){
+    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('width',size); svg.setAttribute('height',size);
+    svg.setAttribute('viewBox','-20 -14 40 28');
+    svg.style.cssText='position:absolute;top:'+topPct+'%;left:'+leftPct+'%;fill:'+INK+';';
+    svg.classList.add('bird-svg',cls);
+    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',birdPath);
+    svg.appendChild(p);
+    wrap.appendChild(svg);
+  }
+
+  makeBird('fly1', 15, 60, 26);
+  makeBird('fly2', 5,  50, 22);
+}
+
+/* ── MASTER SEQUENCE ── */
+setTimeout(function(){
+  /* step 1: resolve name */
+  nameResolveDone = function(){
+    /* step 2: grow tree */
+    initTreePaths();
+    setTimeout(function(){
+      growTree(function(){
+        /* step 3: type tagline */
+        typeTagline(function(){
+          /* step 4: fade in meta */
+          var meta=document.getElementById('splash-meta');
+          meta.style.transition='opacity 0.6s ease';
+          meta.style.opacity='1';
+          /* step 5: fade scroll hint */
+          setTimeout(function(){
+            var hint=document.getElementById('scroll-hint');
+            hint.style.transition='opacity 0.8s ease';
+            hint.style.opacity='1';
+            /* step 6: birds */
+            setTimeout(spawnBirds, 400);
+          }, 600);
+        });
+      });
+    }, 100);
+  };
+  resolveStep();
+}, 600);
+
+/* ── PAGE SWITCHING ── */
+var splash=document.getElementById('splash');
+function show(id,el){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('nav a').forEach(function(a){a.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  splash.style.display=id==='home'?'':'none';
+  window.scrollTo(0,0);
+  triggerAnims();
+}
+function triggerAnims(){
+  document.querySelectorAll('.page.active .anim').forEach(function(el){
+    el.classList.remove('visible'); void el.offsetWidth; el.classList.add('visible');
+  });
+}
+window.addEventListener('load',triggerAnims);
 </script>
 </body>
 </html>
