@@ -6,280 +6,313 @@
 <title>Ethan Rappaport</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --serif: 'EB Garamond', Georgia, serif;
-    --mono: 'DM Mono', monospace;
-    --ink: #1a1a18;
-    --muted: #5f5e5a;
-    --faint: #888780;
-    --rule: rgba(0,0,0,0.12);
-    --bg: #ffffff;
-    --bg2: #f1efe8;
-    --blue-bg: #e6f1fb;
-    --blue-text: #0c447c;
-  }
+:root {
+  --bg:       #e8e6df;
+  --bg2:      #dddbd3;
+  --ink:      #2d4a2d;
+  --ink2:     #3d5e3d;
+  --muted:    #5a7a5a;
+  --faint:    #7a9a7a;
+  --rule:     rgba(45,74,45,0.18);
+  --serif:    'Crimson Pro', 'EB Garamond', Georgia, serif;
+  --mono:     'Courier New', Courier, monospace;
+}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ink: #e8e6df;
-      --muted: #b4b2a9;
-      --faint: #888780;
-      --rule: rgba(255,255,255,0.12);
-      --bg: #1c1c1a;
-      --bg2: #2c2c2a;
-      --blue-bg: #042c53;
-      --blue-text: #85b7eb;
-    }
-  }
+html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
+body { min-height: 100vh; }
 
-  html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
-  body { min-height: 100vh; }
+/* ── KEYFRAMES ── */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+@keyframes blink    { 0%,100% { opacity:1; } 50% { opacity:0; } }
+@keyframes birdFly1 {
+  0%   { transform: translate(0,0) scaleX(1); opacity:1; }
+  100% { transform: translate(120px,-90px) scaleX(1); opacity:0; }
+}
+@keyframes birdFly2 {
+  0%   { transform: translate(0,0) scaleX(-1); opacity:1; }
+  100% { transform: translate(-80px,-110px) scaleX(-1); opacity:0; }
+}
 
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+.anim { opacity:0; }
+.anim.visible { animation: fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-d1 { animation-delay:0.05s; }
+.anim-d2 { animation-delay:0.18s; }
+.anim-d3 { animation-delay:0.30s; }
+.anim-d4 { animation-delay:0.42s; }
+.anim-d5 { animation-delay:0.54s; }
 
-  /* typewriter cursor blink */
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-  }
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:200;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--rule);
+  display: flex; gap:2.5rem;
+  padding: 0.9rem 2rem;
+}
+nav a {
+  font-family: var(--mono); font-size:11px; color:var(--muted);
+  text-decoration:none; letter-spacing:0.1em;
+  text-transform:uppercase; background:none; border:none; padding:0;
+  cursor:pointer; transition:color 0.2s;
+}
+nav a:hover, nav a.active { color:var(--ink); }
 
-  .anim { opacity: 0; }
-  .anim.visible { animation: fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-  .anim-d1 { animation-delay: 0.05s; }
-  .anim-d2 { animation-delay: 0.18s; }
-  .anim-d3 { animation-delay: 0.32s; }
-  .anim-d4 { animation-delay: 0.46s; }
-  .anim-d5 { animation-delay: 0.60s; }
+/* ── SPLASH ── */
+.splash {
+  min-height: 100vh;
+  display: flex; flex-direction:column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  position: relative;
+}
 
-  /* ── NAV ── */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: var(--bg);
-    border-bottom: 0.5px solid var(--rule);
-    display: flex; gap: 2rem;
-    padding: 1rem 1.5rem;
-  }
-  nav a {
-    font-family: var(--mono); font-size: 12px; color: var(--muted);
-    text-decoration: none; letter-spacing: 0.08em;
-    text-transform: uppercase; background: none; border: none; padding: 0;
-    cursor: pointer; transition: color 0.2s;
-  }
-  nav a:hover, nav a.active { color: var(--ink); }
+.splash-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.4rem;
+  position: relative;
+}
 
-  /* ── SPLASH HERO ── */
-  .splash {
-    min-height: 52vh;
-    display: flex; flex-direction: column;
-    justify-content: center;
-    padding: 5rem 1.5rem 4rem;
-    max-width: 740px; margin: 0 auto;
-    border-bottom: 0.5px solid var(--rule);
-  }
-  .splash h1 {
-    font-family: var(--serif);
-    font-size: clamp(3rem, 8vw, 5.5rem);
-    font-weight: 400; font-style: italic;
-    line-height: 1.0;
-    letter-spacing: -0.01em;
-    margin-bottom: 1.6rem;
-    opacity: 0;
-    animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
-  }
-  .tagline-wrap {
-    font-family: var(--mono);
-    font-size: clamp(12px, 1.8vw, 14px);
-    letter-spacing: 0.04em;
-    color: var(--muted);
-    min-height: 1.6em;
-    opacity: 0;
-    animation: fadeIn 0.5s ease 0.7s forwards;
-  }
-  .tagline-wrap .cursor {
-    display: inline-block;
-    width: 1px; height: 1em;
-    background: var(--muted);
-    margin-left: 2px;
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-  }
-  .splash-meta {
-    margin-top: 2rem;
-    font-family: var(--mono); font-size: 11px;
-    color: var(--faint); letter-spacing: 0.07em; text-transform: uppercase;
-    opacity: 0;
-    animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
-  }
-  .nsf-badge {
-    display: inline-block; font-family: var(--mono); font-size: 11px;
-    color: var(--blue-text); background: var(--blue-bg);
-    padding: 4px 10px; border-radius: 3px; letter-spacing: 0.05em;
-    margin-left: 1rem;
-  }
+/* NAME */
+.name-wrap {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+#name-display {
+  font-family: var(--serif);
+  font-size: clamp(3.2rem, 9vw, 6.5rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeIn 0.3s ease 0.2s forwards;
+}
 
-  /* ── SITE BODY ── */
-  .site { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
-  .page { display: none; }
-  .page.active { display: block; }
+/* BIRDS */
+.birds-wrap {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  width: 100%; height: 100%;
+}
+.bird {
+  position: absolute;
+  opacity: 0;
+  fill: var(--ink);
+}
+.bird.fly1 { animation: birdFly1 1.4s cubic-bezier(0.2,0,0.8,1) forwards; }
+.bird.fly2 { animation: birdFly2 1.6s cubic-bezier(0.2,0,0.8,1) 0.15s forwards; }
 
-  /* ── HOME BODY ── */
-  .home-photo-row {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 2.5rem;
-    align-items: start;
-    margin-bottom: 3rem;
-  }
-  @media (max-width: 540px) {
-    .home-photo-row { grid-template-columns: 1fr; }
-    .home-photo-row img, .home-photo-row .photo-placeholder { max-width: 180px; }
-  }
-  .home-photo-row img {
-    width: 100%;
-    aspect-ratio: 3/4;
-    object-fit: cover;
-    object-position: center top;
-    border-radius: 2px;
-    display: block;
-  }
-  .photo-placeholder {
-    width: 100%; aspect-ratio: 3/4;
-    background: var(--bg2);
-    border-radius: 2px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 10px;
-    color: var(--faint); font-family: var(--mono);
-    font-size: 10px; letter-spacing: 0.06em;
-    text-transform: uppercase; text-align: center;
-    padding: 1rem;
-  }
-  .photo-placeholder svg { opacity: 0.25; }
+/* TREE */
+.tree-wrap {
+  flex-shrink: 0;
+  opacity: 0;
+  animation: fadeIn 1s ease 2.8s forwards;
+}
 
-  .home-bio { font-size: 1.15rem; line-height: 1.8; }
-  .home-bio p { margin-bottom: 1rem; }
-  .home-bio a { color: var(--ink); }
-  .home-bio .bio-name {
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--faint); margin-bottom: 0.8rem;
-  }
+/* TAGLINE */
+.tagline-wrap {
+  font-family: var(--mono);
+  font-size: clamp(11px,1.6vw,14px);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  min-height: 1.5em;
+  opacity: 0;
+  animation: fadeIn 0.5s ease 0.8s forwards;
+  margin-bottom: 2.5rem;
+}
+.cursor {
+  display: inline-block; width:1px; height:1em;
+  background: var(--muted);
+  margin-left:2px; vertical-align:text-bottom;
+  animation: blink 1s step-end infinite;
+}
 
-  .divider { border: none; border-top: 0.5px solid var(--rule); margin: 2.5rem 0; }
+.splash-meta {
+  font-family: var(--mono); font-size:11px;
+  color: var(--faint); letter-spacing:0.1em; text-transform:uppercase;
+  opacity:0; animation: fadeIn 0.6s ease 2.2s forwards;
+  margin-bottom: 1.2rem;
+}
+.nsf-badge {
+  display:inline-block; font-family:var(--mono); font-size:11px;
+  color: var(--ink); background: var(--bg2);
+  border: 0.5px solid var(--rule);
+  padding:4px 10px; border-radius:2px; letter-spacing:0.05em; margin-left:1rem;
+}
 
-  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-  @media (max-width: 520px) { .home-grid { grid-template-columns: 1fr; } }
-  .home-block h3 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-bottom: 1rem; }
-  .pub-item { margin-bottom: 1.2rem; }
-  .pub-item .title { font-size: 1rem; line-height: 1.5; }
-  .pub-item .journal { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .contact-line { font-size: 1rem; color: var(--muted); margin-bottom: 0.4rem; display: flex; align-items: baseline; gap: 8px; }
-  .contact-line span.label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); min-width: 64px; flex-shrink: 0; }
-  .contact-line a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
-  .contact-line a:hover { color: var(--ink); }
+.scroll-hint {
+  position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:10px; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--faint);
+  opacity:0; animation:fadeIn 0.8s ease 3.2s forwards;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.scroll-hint svg { opacity:0.5; }
 
-  /* ── SECTION PAGES ── */
-  .section-header { margin-bottom: 2.5rem; }
-  .section-header h2 { font-size: 2rem; font-weight: 400; font-style: italic; }
+/* ── SITE BODY ── */
+.site { max-width:720px; margin:0 auto; padding:4rem 1.5rem 6rem; }
+.page { display:none; }
+.page.active { display:block; }
 
-  .research-block { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 0.5px solid var(--rule); }
-  .research-block:last-child { border-bottom: none; }
-  .research-block h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.4rem; }
-  .research-block .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
-  .research-block p { font-size: 1rem; line-height: 1.75; color: var(--muted); }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.8rem; }
-  .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 2px; background: var(--bg2); color: var(--faint); }
+/* ── HOME ── */
+.home-photo-row {
+  display:grid; grid-template-columns:190px 1fr; gap:2.5rem;
+  align-items:start; margin-bottom:3rem;
+}
+@media(max-width:540px) {
+  .home-photo-row { grid-template-columns:1fr; }
+  .home-photo-row img, .photo-placeholder { max-width:160px; }
+}
+.home-photo-row img {
+  width:100%; aspect-ratio:3/4; object-fit:cover; object-position:center top;
+  border-radius:1px; display:block;
+}
+.photo-placeholder {
+  width:100%; aspect-ratio:3/4; background:var(--bg2);
+  border:0.5px solid var(--rule); border-radius:1px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; color:var(--faint); font-family:var(--mono);
+  font-size:10px; letter-spacing:0.06em; text-transform:uppercase; text-align:center; padding:1rem;
+}
+.photo-placeholder svg { opacity:0.3; }
+.home-bio { font-size:1.12rem; line-height:1.85; }
+.home-bio p { margin-bottom:1rem; color:var(--ink2); }
+.bio-label { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--faint); margin-bottom:0.7rem; }
+hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
+.home-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+@media(max-width:520px) { .home-grid { grid-template-columns:1fr; } }
+.home-block h3 { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--faint); margin-bottom:1rem; }
+.pub-item { margin-bottom:1.2rem; }
+.pub-item .title { font-size:1rem; line-height:1.5; color:var(--ink); }
+.pub-item .journal { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:2px; }
+.contact-line { font-size:1rem; color:var(--muted); margin-bottom:0.4rem; display:flex; align-items:baseline; gap:8px; }
+.contact-line span.label { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:var(--faint); min-width:64px; flex-shrink:0; }
+.contact-line a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.contact-line a:hover { color:var(--ink); }
 
-  .pub-entry { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 0.5px solid var(--rule); }
-  .pub-entry:last-child { border-bottom: none; }
-  .pub-year { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 4px; }
-  .pub-content .title { font-size: 1.05rem; line-height: 1.5; margin-bottom: 0.3rem; }
-  .pub-content .authors { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.25rem; }
-  .pub-content .authors strong { color: var(--ink); font-weight: 400; }
-  .pub-content .venue { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .pub-link { font-family: var(--mono); font-size: 11px; color: var(--blue-text); text-decoration: none; margin-left: 10px; }
-  .pub-link:hover { text-decoration: underline; }
-
-  .cv-section { margin-bottom: 2.5rem; }
-  .cv-section h3 {
-    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--faint);
-    border-bottom: 0.5px solid var(--rule); padding-bottom: 0.5rem; margin-bottom: 1.2rem;
-  }
-  .cv-entry { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; margin-bottom: 1.2rem; }
-  @media (max-width: 480px) { .cv-entry { grid-template-columns: 1fr; gap: 0.2rem; } }
-  .cv-date { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 3px; }
-  .cv-body .role { font-size: 1rem; }
-  .cv-body .place { font-size: 0.9rem; color: var(--muted); font-style: italic; margin-top: 1px; }
-  .cv-body .desc { font-size: 0.9rem; color: var(--muted); margin-top: 4px; line-height: 1.6; }
-  .award-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.7rem; }
-  .award-name { font-size: 0.95rem; }
-  .award-year { font-family: var(--mono); font-size: 11px; color: var(--faint); }
-  .skills-block { font-size: 0.95rem; line-height: 2; color: var(--muted); }
-  .skills-block span.label { color: var(--ink); }
+/* ── OTHER PAGES ── */
+.section-header { margin-bottom:2.5rem; }
+.section-header h2 { font-size:2.2rem; font-weight:400; font-style:italic; color:var(--ink); }
+.research-block { margin-bottom:2.5rem; padding-bottom:2.5rem; border-bottom:0.5px solid var(--rule); }
+.research-block:last-child { border-bottom:none; }
+.research-block h3 { font-size:1.2rem; font-weight:600; margin-bottom:0.4rem; color:var(--ink); }
+.research-block .meta { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:0.05em; margin-bottom:0.8rem; }
+.research-block p { font-size:1rem; line-height:1.8; color:var(--ink2); }
+.tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:0.8rem; }
+.tag { font-family:var(--mono); font-size:10px; letter-spacing:0.05em; padding:3px 8px; border-radius:2px; background:var(--bg2); color:var(--faint); border:0.5px solid var(--rule); }
+.pub-entry { display:grid; grid-template-columns:48px 1fr; gap:1rem; margin-bottom:2rem; padding-bottom:2rem; border-bottom:0.5px solid var(--rule); }
+.pub-entry:last-child { border-bottom:none; }
+.pub-year { font-family:var(--mono); font-size:11px; color:var(--faint); padding-top:4px; }
+.pub-content .title { font-size:1.05rem; line-height:1.5; margin-bottom:0.3rem; color:var(--ink); }
+.pub-content .authors { font-size:0.9rem; color:var(--muted); margin-bottom:0.25rem; }
+.pub-content .authors strong { color:var(--ink); font-weight:400; }
+.pub-content .venue { font-family:var(--mono); font-size:11px; color:var(--muted); }
+.pub-link { font-family:var(--mono); font-size:11px; color:var(--ink); text-decoration:none; margin-left:10px; }
+.pub-link:hover { text-decoration:underline; }
+.cv-section { margin-bottom:2.5rem; }
+.cv-section h3 { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--faint); border-bottom:0.5px solid var(--rule); padding-bottom:0.5rem; margin-bottom:1.2rem; }
+.cv-entry { display:grid; grid-template-columns:110px 1fr; gap:1rem; margin-bottom:1.2rem; }
+@media(max-width:480px) { .cv-entry { grid-template-columns:1fr; gap:0.2rem; } }
+.cv-date { font-family:var(--mono); font-size:11px; color:var(--faint); padding-top:3px; }
+.cv-body .role { font-size:1rem; color:var(--ink); }
+.cv-body .place { font-size:0.9rem; color:var(--muted); font-style:italic; margin-top:1px; }
+.cv-body .desc { font-size:0.9rem; color:var(--muted); margin-top:4px; line-height:1.6; }
+.award-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.7rem; }
+.award-name { font-size:0.95rem; color:var(--ink); }
+.award-year { font-family:var(--mono); font-size:11px; color:var(--faint); }
+.skills-block { font-size:0.95rem; line-height:2.1; color:var(--ink2); }
+.skills-block span.label { color:var(--ink); font-weight:600; }
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="active" onclick="show('home', this)">Home</a>
-  <a onclick="show('research', this)">Research</a>
-  <a onclick="show('publications', this)">Publications</a>
-  <a onclick="show('cv', this)">CV</a>
+  <a class="active" onclick="show('home',this)">Home</a>
+  <a onclick="show('research',this)">Research</a>
+  <a onclick="show('publications',this)">Publications</a>
+  <a onclick="show('cv',this)">CV</a>
 </nav>
 
-<!-- SPLASH — shown only on home -->
+<!-- ══ SPLASH ══ -->
 <div class="splash" id="splash">
-  <h1>Ethan<br>Rappaport</h1>
+
+  <div class="splash-title-row">
+
+    <!-- TREE SVG -->
+    <div class="tree-wrap" id="tree-wrap">
+      <svg width="72" height="130" viewBox="0 0 72 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- trunk -->
+        <rect x="32" y="90" width="8" height="38" fill="#2d4a2d"/>
+        <!-- canopy layers -->
+        <polygon points="36,10 62,60 10,60" fill="#2d4a2d"/>
+        <polygon points="36,28 66,75 6,75" fill="#2d4a2d"/>
+        <polygon points="36,46 68,92 4,92" fill="#2d4a2d"/>
+      </svg>
+    </div>
+
+    <!-- NAME + BIRDS -->
+    <div class="name-wrap" id="name-wrap">
+      <div id="name-display"></div>
+      <div class="birds-wrap" id="birds-wrap"></div>
+    </div>
+
+  </div>
+
   <div class="tagline-wrap">
     <span id="tagline-text"></span><span class="cursor" id="cursor"></span>
   </div>
+
   <div class="splash-meta">
     PhD Student &middot; BEES &middot; University of Maryland
     <span class="nsf-badge">NSF Graduate Research Fellow</span>
   </div>
+
+  <div class="scroll-hint">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M7 2v10M3 8l4 4 4-4" stroke="#5a7a5a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    scroll
+  </div>
+
 </div>
 
-<div class="site">
+<!-- ══ SITE BODY ══ -->
+<div class="site" id="site-body">
 
   <!-- HOME -->
   <div class="page active" id="home">
-
     <div class="home-photo-row anim anim-d1">
-      <!-- Rename your photo to photo.jpg and put it in the same folder -->
       <div>
-        <img src="photo.jpg" alt="Ethan Rappaport"
-             id="portrait"
-             onerror="this.style.display='none'; document.getElementById('portrait-placeholder').style.display='flex';">
-        <div class="photo-placeholder" id="portrait-placeholder" style="display:none;">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <circle cx="18" cy="12" r="6" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M4 34c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <img src="photo.jpg" alt="Ethan Rappaport" id="portrait"
+             onerror="this.style.display='none';document.getElementById('portrait-ph').style.display='flex';">
+        <div class="photo-placeholder" id="portrait-ph" style="display:none;">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="11" r="5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M3 30c0-7.18 5.82-13 13-13s13 5.82 13 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
           </svg>
-          Place photo.jpg here
+          photo.jpg
         </div>
       </div>
       <div class="home-bio">
-        <div class="bio-name">About</div>
+        <div class="bio-label">About</div>
         <p>I'm a mathematical biologist interested in how ecological and evolutionary dynamics shape microbial communities. My work bridges theoretical modeling and computational analysis, with a focus on colonization resistance, consumer-resource dynamics, and host-phage coevolution.</p>
         <p>I completed my B.S. in Mathematics and Biology at Boston College, where I worked in the Momeni Lab. I'm now a PhD student in the BEES program at the University of Maryland.</p>
       </div>
     </div>
-
     <hr class="divider">
-
     <div class="home-grid anim anim-d2">
       <div class="home-block">
         <h3>Recent work</h3>
@@ -299,7 +332,6 @@
         <div class="contact-line"><span class="label">Location</span>College Park, MD</div>
       </div>
     </div>
-
   </div>
 
   <!-- RESEARCH -->
@@ -310,10 +342,8 @@
       <div class="meta">Momeni Lab &middot; Boston College &middot; 2023&ndash;2025</div>
       <p>My undergraduate thesis and first-author publication examined how resource diversity and supply rates shape the ability of resident microbial communities to resist invasion. I developed a consumer-resource population model and analyzed how environmental parameters drive bifurcations in invasion outcomes, finding that both resource richness and supply rates are key determinants of colonization resistance.</p>
       <div class="tag-row">
-        <span class="tag">consumer-resource models</span>
-        <span class="tag">colonization resistance</span>
-        <span class="tag">dynamical systems</span>
-        <span class="tag">microbial ecology</span>
+        <span class="tag">consumer-resource models</span><span class="tag">colonization resistance</span>
+        <span class="tag">dynamical systems</span><span class="tag">microbial ecology</span>
       </div>
     </div>
     <div class="research-block anim anim-d3">
@@ -321,10 +351,8 @@
       <div class="meta">University of Maryland &middot; 2025&ndash;present</div>
       <p>I am developing computational models of host-phage coevolution, simulating how reciprocal selection pressures drive the diversification of bacterial hosts and their viral predators. This work combines differential equation modeling with phylogenetic tracking to characterize how coevolutionary dynamics produce diversity over ecological timescales.</p>
       <div class="tag-row">
-        <span class="tag">host-phage coevolution</span>
-        <span class="tag">ODE/DDE systems</span>
-        <span class="tag">phylogenetics</span>
-        <span class="tag">MATLAB</span>
+        <span class="tag">host-phage coevolution</span><span class="tag">ODE/DDE systems</span>
+        <span class="tag">phylogenetics</span><span class="tag">MATLAB</span>
       </div>
     </div>
     <div class="research-block anim anim-d4">
@@ -332,9 +360,7 @@
       <div class="meta">Collaborative work &middot; 2025&ndash;2026</div>
       <p>Contributing author on work examining how spatial structure mediates the outcomes of population interactions in microbial communities, with implications for community assembly and stability in structured environments.</p>
       <div class="tag-row">
-        <span class="tag">spatial ecology</span>
-        <span class="tag">community assembly</span>
-        <span class="tag">population dynamics</span>
+        <span class="tag">spatial ecology</span><span class="tag">community assembly</span><span class="tag">population dynamics</span>
       </div>
     </div>
   </div>
@@ -439,50 +465,153 @@
     </div>
   </div>
 
-</div>
+</div><!-- /site -->
 
 <script>
-  /* ── TAGLINE TYPEWRITER ── */
-  var tagline = "Connecting mathematics and microbial evolution.";
-  var tEl = document.getElementById('tagline-text');
-  var cur = document.getElementById('cursor');
-  var i = 0;
+/* ══════════════════════════════════════════
+   NAME ANIMATION: greek/math → real letters
+   ══════════════════════════════════════════ */
+var targetName = "Ethan Rappaport";
 
-  function type() {
-    if (i <= tagline.length) {
-      tEl.textContent = tagline.slice(0, i);
-      i++;
-      setTimeout(type, i === 1 ? 400 : 38 + Math.random() * 22);
-    } else {
-      // hide cursor after done
-      setTimeout(function() { cur.style.display = 'none'; }, 2000);
+// Map each letter to a starting greek/math symbol
+var greekMap = {
+  'E':'Σ','t':'τ','h':'η','a':'α','n':'ν',
+  ' ':' ',
+  'R':'Ρ','p':'ρ','o':'ω','r':'π','s':'ς'
+};
+var mathPool = ['∂','∫','∇','Δ','λ','μ','φ','ψ','ξ','Ω','β','γ','δ','ε','ζ','θ','κ','Λ','Ξ','Π','Σ','Φ','Ψ'];
+
+function startSymbol(c) {
+  if (c === ' ') return ' ';
+  return greekMap[c] || mathPool[Math.floor(Math.random()*mathPool.length)];
+}
+
+var nameEl = document.getElementById('name-display');
+var letters = targetName.split('');
+// Build initial state: all symbols
+var state = letters.map(function(c){ return startSymbol(c); });
+var resolved = letters.map(function(c){ return false; });
+
+function renderName() {
+  nameEl.textContent = state.join('');
+}
+
+// Resolve letters one by one, randomly, with slight scramble of unresolved
+function resolveStep() {
+  // find unresolved indices
+  var pending = [];
+  for (var i=0;i<resolved.length;i++) { if (!resolved[i]) pending.push(i); }
+  if (pending.length === 0) return;
+
+  // pick a random unresolved index to resolve
+  var pick = pending[Math.floor(Math.random()*pending.length)];
+  resolved[pick] = true;
+  state[pick] = letters[pick];
+
+  // lightly scramble remaining unresolved
+  for (var j=0;j<pending.length;j++) {
+    var idx = pending[j];
+    if (idx !== pick && Math.random() < 0.4) {
+      state[idx] = letters[idx] === ' ' ? ' ' : mathPool[Math.floor(Math.random()*mathPool.length)];
     }
   }
-  setTimeout(type, 900);
 
-  /* ── PAGE SWITCHING ── */
-  var splash = document.getElementById('splash');
+  renderName();
+  var delay = 80 + Math.random()*140;
+  if (pending.length > 1) setTimeout(resolveStep, delay);
+}
 
-  function show(id, el) {
-    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-    document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
-    document.getElementById(id).classList.add('active');
-    el.classList.add('active');
-    splash.style.display = id === 'home' ? '' : 'none';
-    window.scrollTo(0, 0);
-    triggerAnims();
+// Start: render symbols immediately, begin resolving after brief pause
+renderName();
+setTimeout(resolveStep, 600);
+
+
+/* ══════════════════════════════════════════
+   TAGLINE TYPEWRITER
+   ══════════════════════════════════════════ */
+var tagline = "Connecting mathematics and microbial evolution.";
+var tEl  = document.getElementById('tagline-text');
+var cEl  = document.getElementById('cursor');
+var ti   = 0;
+
+function typeTagline() {
+  if (ti <= tagline.length) {
+    tEl.textContent = tagline.slice(0,ti);
+    ti++;
+    setTimeout(typeTagline, ti===1 ? 300 : 36+Math.random()*20);
+  } else {
+    setTimeout(function(){ cEl.style.display='none'; }, 2000);
   }
+}
+setTimeout(typeTagline, 1100);
 
-  function triggerAnims() {
-    var elems = document.querySelectorAll('.page.active .anim');
-    elems.forEach(function(el) {
-      el.classList.remove('visible');
-      void el.offsetWidth;
-      el.classList.add('visible');
-    });
-  }
 
-  window.addEventListener('load', triggerAnims);
+/* ══════════════════════════════════════════
+   BIRD HOVER (first time only)
+   ══════════════════════════════════════════ */
+var birdsTriggered = false;
+
+function spawnBirds() {
+  if (birdsTriggered) return;
+  birdsTriggered = true;
+
+  var wrap = document.getElementById('birds-wrap');
+  var nameBox = document.getElementById('name-display').getBoundingClientRect();
+  var wrapBox = wrap.getBoundingClientRect();
+
+  // Bird SVG path — simple angular gull silhouette
+  var birdPath = "M0,-4 C-3,-7 -10,-5 -14,-2 C-10,-4 -5,-3 0,0 C5,-3 10,-4 14,-2 C10,-5 3,-7 0,-4Z";
+
+  // Bird 1 — launches right from upper canopy area
+  var b1 = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  b1.setAttribute('width','28'); b1.setAttribute('height','28');
+  b1.setAttribute('viewBox','-16 -12 32 24');
+  b1.style.cssText = 'position:absolute;top:10%;left:55%;fill:#2d4a2d;';
+  var p1 = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p1.setAttribute('d', birdPath);
+  b1.appendChild(p1);
+  b1.classList.add('bird','fly1');
+  wrap.appendChild(b1);
+
+  // Bird 2 — launches left
+  var b2 = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  b2.setAttribute('width','24'); b2.setAttribute('height','24');
+  b2.setAttribute('viewBox','-16 -12 32 24');
+  b2.style.cssText = 'position:absolute;top:20%;left:35%;fill:#2d4a2d;';
+  var p2 = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p2.setAttribute('d', birdPath);
+  b2.appendChild(p2);
+  b2.classList.add('bird','fly2');
+  wrap.appendChild(b2);
+}
+
+document.getElementById('name-wrap').addEventListener('mouseenter', spawnBirds);
+
+
+/* ══════════════════════════════════════════
+   PAGE SWITCHING
+   ══════════════════════════════════════════ */
+var splash = document.getElementById('splash');
+
+function show(id, el) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('nav a').forEach(function(a){ a.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  splash.style.display = id==='home' ? '' : 'none';
+  window.scrollTo(0,0);
+  triggerAnims();
+}
+
+function triggerAnims() {
+  document.querySelectorAll('.page.active .anim').forEach(function(el){
+    el.classList.remove('visible');
+    void el.offsetWidth;
+    el.classList.add('visible');
+  });
+}
+
+window.addEventListener('load', triggerAnims);
 </script>
 </body>
 </html>
