@@ -77,11 +77,23 @@ nav a:hover, nav a.active { color:var(--ink); }
   text-align:center; padding:6rem 2rem 5rem; position:relative;
 }
 
-/* Splash title row — name centered with tree overlaid */
+/* Phase portrait canvas — fills splash, sits behind all content */
+#phase-canvas {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:0;
+  opacity:0;
+  transition:opacity 1.2s ease;
+}
+#phase-canvas.visible { opacity:1; }
+
+/* Splash title row */
 .splash-title-row {
-  position: relative;
-  display: inline-block; /* shrink-wrap to name width */
   margin-bottom: 1.8rem;
+  position:relative; z-index:2;
 }
 
 #name-display {
@@ -99,17 +111,6 @@ nav a:hover, nav a.active { color:var(--ink); }
   animation: fadeIn 0.3s ease 0.2s forwards;
 }
 
-/* Tree animation WebP — overlaid on name, arching over from right */
-#tree-anim {
-  position: absolute;
-  right: -1em;
-  bottom: -0.05em;
-  width: clamp(180px, 52vw, 560px);
-  height: auto;
-  pointer-events: none;
-  z-index: 1;
-  display: none; /* hidden until JS shows it at the right moment */
-}
 
 
 /* Birds container */
@@ -127,6 +128,7 @@ nav a:hover, nav a.active { color:var(--ink); }
   font-family:var(--mono); font-size:clamp(11px,1.6vw,14px);
   letter-spacing:0.06em; color:var(--muted);
   min-height:1.5em; margin-bottom:2.5rem;
+  position:relative; z-index:2;
 }
 .cursor {
   display:inline-block; width:1px; height:1em;
@@ -138,6 +140,7 @@ nav a:hover, nav a.active { color:var(--ink); }
   font-family:var(--mono); font-size:11px; color:var(--faint);
   letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.2rem;
   padding: 0 1rem;
+  position:relative; z-index:2;
 }
 .nsf-badge {
   display:inline-block; font-family:var(--mono); font-size:11px;
@@ -324,9 +327,10 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 <!-- SPLASH -->
 <div class="splash" id="splash">
 
+  <canvas id="phase-canvas" aria-hidden="true"></canvas>
+
   <div class="splash-title-row" id="title-row">
     <div id="name-display"></div>
-    <img id="tree-anim" src="tree_anim.webp" alt="" aria-hidden="true">
     <div id="birds-wrap"></div>
   </div>
 
@@ -606,19 +610,187 @@ function resolveStep(){
   else { if(nameResolveDone) nameResolveDone(); }
 }
 
-/* ── 2. TREE REVEAL (WebP animation) ── */
-function revealTree(onDone) {
-  var img = document.getElementById('tree-anim');
-  if (!img) { if(onDone) onDone(); return; }
-  // Force animation restart by reloading src, then show
-  var src = img.src;
-  img.src = '';
-  img.style.display = 'block';
-  img.src = src;
-  // WebP plays for ~1.8s then holds; fire callback after animation finishes
-  setTimeout(function(){ if(onDone) onDone(); }, 2000);
-}
+/* ── 2. PHASE PORTRAIT CANVAS ── */
+(function(){
+  var canvas = document.getElementById('phase-canvas');
+  var ctx = canvas.getContext('2d');
 
+  // Lotka-Volterra parameters: dx/dt = x(a-by), dy/dt = y(cx-d)
+  // Conserved quantity: H(x,y) = cx - d*ln(x) + ay - b*ln(y)
+  // Equilibrium at (d/c, a/b)
+  var a=1.0, b=0.5, c=0.5, d=0.8;
+  var xEq = d/c;   // 1.6
+  var yEq = a/b;   // 2.0
+
+  // Five orbits at different H-levels around the equilibrium
+  // We parameterise each orbit by its initial x0 at y=yEq (above equilibrium)
+  var orbitSeeds = [0.55, 0.85, 1.15, 1.45, 1.75];
+
+  // Integrate one full closed orbit using RK4, returning array of {x,y}
+  function integrateOrbit(x0, y0) {
+    var pts = [];
+    var x = x0, y = y0;
+    var dt = 0.012, maxSteps = 6000;
+    var H0 = c*x - d*Math.log(x) + a*y - b*Math.log(y);
+    pts.push({x:x, y:y});
+    for (var i=0; i<maxSteps; i++) {
+      // RK4
+      var k1x = x*(a - b*y),           k1y = y*(c*x - d);
+      var k2x = (x+dt/2*k1x)*(a-b*(y+dt/2*k1y)), k2y = (y+dt/2*k1y)*(c*(x+dt/2*k1x)-d);
+      var k3x = (x+dt/2*k2x)*(a-b*(y+dt/2*k2y)), k3y = (y+dt/2*k2y)*(c*(x+dt/2*k2x)-d);
+      var k4x = (x+dt*k3x)*(a-b*(y+dt*k3y)),     k4y = (y+dt*k3y)*(c*(x+dt*k3x)-d);
+      x += dt/6*(k1x+2*k2x+2*k3x+k4x);
+      y += dt/6*(k1y+2*k2y+2*k3y+k4y);
+      if (x<=0||y<=0||x>20||y>20) break;
+      pts.push({x:x, y:y});
+      // Detect closure: back near start after at least 100 steps
+      if (i>100) {
+        var dx=x-x0, dy=y-y0;
+        if (Math.sqrt(dx*dx+dy*dy)<0.04) break;
+      }
+    }
+    return pts;
+  }
+
+  var orbits = [];
+  for (var s=0; s<orbitSeeds.length; s++) {
+    var x0 = xEq + orbitSeeds[s];
+    var y0 = yEq; // start at y=yEq (on horizontal through equilibrium)
+    var pts = integrateOrbit(x0, y0);
+    if (pts.length > 20) orbits.push(pts);
+  }
+
+  // Drawing state: each orbit has an animated head travelling around its loop
+  var heads = orbits.map(function(pts, i) {
+    return {
+      idx: Math.floor(pts.length * i / orbits.length), // stagger starts
+      speed: 1 + i * 0.3,  // outer orbits move faster (longer path)
+      trail: []
+    };
+  });
+
+  var W, H, scaleX, scaleY, offX, offY;
+
+  function resize() {
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width  = W * window.devicePixelRatio;
+    canvas.height = H * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    // Find bounding box of all orbit points
+    var xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+    orbits.forEach(function(pts){
+      pts.forEach(function(p){
+        if(p.x<xMin)xMin=p.x; if(p.x>xMax)xMax=p.x;
+        if(p.y<yMin)yMin=p.y; if(p.y>yMax)yMax=p.y;
+      });
+    });
+
+    // Map phase space to canvas with padding
+    // Keep orbits in the lower portion of the canvas to avoid overlapping
+    // name (top ~35% on desktop, top ~30% on mobile handled by margins)
+    var padX = W * 0.10;
+    var padTop = H * 0.38;   // leave top 38% clear — name + tagline zone
+    var padBottom = H * 0.12; // leave room for scroll hint
+    var drawW = W - padX*2;
+    var drawH = H - padTop - padBottom;
+
+    var rangeX = xMax - xMin, rangeY = yMax - yMin;
+    var aspect = drawW/drawH;
+    var dataAspect = rangeX/rangeY;
+    if (dataAspect > aspect) {
+      scaleX = drawW/rangeX;
+      scaleY = scaleX;
+    } else {
+      scaleY = drawH/rangeY;
+      scaleX = scaleY;
+    }
+    offX = padX + (drawW - rangeX*scaleX)/2 - xMin*scaleX;
+    offY = padTop + (drawH - rangeY*scaleY)/2 - yMin*scaleY;
+  }
+
+  function toScreen(p) {
+    return { sx: offX + p.x*scaleX, sy: H - (offY + p.y*scaleY) };
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw faint complete orbits first
+    orbits.forEach(function(pts, i) {
+      if (pts.length < 2) return;
+      ctx.beginPath();
+      var p0 = toScreen(pts[0]);
+      ctx.moveTo(p0.sx, p0.sy);
+      for (var j=1; j<pts.length; j++) {
+        var p = toScreen(pts[j]);
+        ctx.lineTo(p.sx, p.sy);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = '#2d4a2d';
+      ctx.lineWidth = 0.6;
+      ctx.globalAlpha = 0.13;
+      ctx.stroke();
+    });
+
+    // Advance and draw each animated head
+    orbits.forEach(function(pts, i) {
+      var h = heads[i];
+      var TRAIL = 60;
+
+      // Advance head
+      for (var step=0; step<Math.ceil(h.speed); step++) {
+        h.idx = (h.idx + 1) % pts.length;
+        h.trail.push(h.idx);
+        if (h.trail.length > TRAIL) h.trail.shift();
+      }
+
+      // Draw trail with fade
+      if (h.trail.length < 2) return;
+      for (var t=1; t<h.trail.length; t++) {
+        var pa = toScreen(pts[h.trail[t-1]]);
+        var pb = toScreen(pts[h.trail[t]]);
+        var frac = t / h.trail.length;
+        ctx.beginPath();
+        ctx.moveTo(pa.sx, pa.sy);
+        ctx.lineTo(pb.sx, pb.sy);
+        ctx.strokeStyle = '#2d4a2d';
+        ctx.lineWidth = 1.0 + frac * 0.8;
+        ctx.globalAlpha = frac * 0.65;
+        ctx.stroke();
+      }
+
+      // Head dot
+      var headPt = toScreen(pts[h.idx]);
+      ctx.beginPath();
+      ctx.arc(headPt.sx, headPt.sy, 2.5, 0, Math.PI*2);
+      ctx.fillStyle = '#2d4a2d';
+      ctx.globalAlpha = 0.9;
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(drawFrame);
+  }
+
+  function init() {
+    resize();
+    window.addEventListener('resize', function(){
+      resize();
+      heads.forEach(function(h){ h.trail=[]; });
+    });
+    drawFrame();
+    // Fade in after the main sequence triggers it
+    // (called externally via showPhasePortrait())
+  }
+
+  window.showPhasePortrait = function() {
+    canvas.classList.add('visible');
+  };
+
+  init();
+})();
 
 /* ── 3. TAGLINE ── */
 var tagline = "Connecting mathematics and microbial evolution.";
@@ -662,10 +834,11 @@ setTimeout(function(){
       revealTree(function(){
         /* Type tagline */
         typeTagline(function(){
-          /* Fade in meta */
+          /* Fade in meta + phase portrait */
           var meta=document.getElementById('splash-meta');
           meta.style.transition='opacity 0.6s ease';
           meta.style.opacity='1';
+          if(window.showPhasePortrait) showPhasePortrait();
           /* Fade scroll hint */
           setTimeout(function(){
             var hint=document.getElementById('scroll-hint');
