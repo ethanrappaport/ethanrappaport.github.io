@@ -827,14 +827,34 @@ function spawnBirds(){
 }
 
 /* ── MASTER SEQUENCE ── */
+/* ── MASTER SEQUENCE ── */
 setTimeout(function(){
   nameResolveDone = function(){
-  setTimeout(function(){
-    typeTagline(function(){
-      ...
-    });
-  }, 100);
-};
+    setTimeout(function(){
+
+      // Show phase portrait now that name is resolved
+      if (window.showPhasePortrait) {
+        showPhasePortrait();
+      }
+
+      // Type tagline
+      typeTagline(function(){
+
+        // Fade in meta + scroll hint
+        var meta = document.getElementById('splash-meta');
+        var hint = document.getElementById('scroll-hint');
+        meta.style.transition = hint.style.transition = 'opacity 0.8s ease';
+        meta.style.opacity = 1;
+        hint.style.opacity = 1;
+
+        // Birds after meta appears
+        setTimeout(spawnBirds, 400);
+
+      });
+
+    }, 100);
+  };
+
   resolveStep();
 }, 600);
 
