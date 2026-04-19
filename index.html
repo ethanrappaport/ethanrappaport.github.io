@@ -829,28 +829,12 @@ function spawnBirds(){
 /* ── MASTER SEQUENCE ── */
 setTimeout(function(){
   nameResolveDone = function(){
-    /* Grow tree */
-    setTimeout(function(){
-      revealTree(function(){
-        /* Type tagline */
-        typeTagline(function(){
-          /* Fade in meta + phase portrait */
-          var meta=document.getElementById('splash-meta');
-          meta.style.transition='opacity 0.6s ease';
-          meta.style.opacity='1';
-          if(window.showPhasePortrait) showPhasePortrait();
-          /* Fade scroll hint */
-          setTimeout(function(){
-            var hint=document.getElementById('scroll-hint');
-            hint.style.transition='opacity 0.8s ease';
-            hint.style.opacity='1';
-            /* Birds */
-            setTimeout(spawnBirds, 400);
-          }, 600);
-        });
-      });
-    }, 100);
-  };
+  setTimeout(function(){
+    typeTagline(function(){
+      ...
+    });
+  }, 100);
+};
   resolveStep();
 }, 600);
 
