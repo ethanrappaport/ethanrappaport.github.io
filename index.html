@@ -35,7 +35,7 @@
 html { background: var(--bg); color: var(--ink); font-family: var(--serif); }
 body { min-height: 100vh; }
 
-@keyframes fadeUp  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp  { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
 
 /* Bird flight paths */
@@ -50,7 +50,7 @@ body { min-height: 100vh; }
 
 
 .anim { opacity:0; }
-.anim.visible { animation: fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim.visible { animation: fadeUp 0.5s cubic-bezier(0.25,1,0.5,1) forwards; }
 .anim-d1{animation-delay:.05s;} .anim-d2{animation-delay:.18s;}
 .anim-d3{animation-delay:.30s;} .anim-d4{animation-delay:.42s;}
 .anim-d5{animation-delay:.54s;}
@@ -63,11 +63,13 @@ nav {
   flex-wrap: wrap;
 }
 nav a {
-  font-family:var(--mono); font-size:11px; color:var(--muted);
+  font-family:var(--mono); font-size:12px; color:var(--ink2);
   text-decoration:none; letter-spacing:0.1em; text-transform:uppercase;
-  background:none; border:none; padding:0; cursor:pointer; transition:color 0.2s;
+  background:none; border:none; padding:4px 0; cursor:pointer; transition:color 0.2s;
+  border-bottom: 1.5px solid transparent;
 }
-nav a:hover, nav a.active { color:var(--ink); }
+nav a:hover { color:var(--ink); border-bottom-color: var(--faint); }
+nav a.active { color:var(--ink); font-weight:600; border-bottom: 1.5px solid var(--ink); }
 
 /* SPLASH */
 .splash {
@@ -76,18 +78,21 @@ nav a:hover, nav a.active { color:var(--ink); }
   text-align:center; padding:6rem 2rem 5rem; position:relative;
 }
 
-/* Phase portrait canvas — fills splash, sits behind all content */
+/* Dynamical system canvas — compact block above name, stays with splash */
 #phase-canvas {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:0;
-  opacity:0;
-  transition:opacity 1.2s ease;
+  display: block;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  margin-bottom: 1.8rem;
 }
-#phase-canvas.visible { opacity:1; }
+#phase-canvas.visible { opacity: 1; }
+
+@media (max-width: 600px) {
+  #phase-canvas { height: 180px; margin-bottom: 1.2rem; }
+}
 
 /* Splash title row */
 .splash-title-row {
@@ -151,6 +156,9 @@ nav a:hover, nav a.active { color:var(--ink); }
 .home-photo-row {
   display:grid; grid-template-columns:190px 1fr; gap:2.5rem;
   align-items:start; margin-bottom:3rem;
+}
+.home-photo-col {
+  padding-top: 1.7rem; /* align photo top with bio body text, not label */
 }
 .home-photo-row img {
   width:100%; aspect-ratio:3/4; object-fit:cover; object-position:center top;
@@ -230,6 +238,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 /* ── MOBILE RESPONSIVE ── */
 @media(max-width: 600px) {
   nav { gap: 1.2rem; padding: 0.75rem 1.2rem; }
+  nav a { padding: 6px 0; } /* bigger touch targets */
 
   .splash { padding: 5rem 1.2rem 4rem; }
 
@@ -245,25 +254,16 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     text-align: center;
   }
 
-  
-
-  
-
-  .splash-meta {
-    font-size: 10px;
-    line-height: 1.7;
-  }
-
-  .nsf-badge {
-    display: block;
-    margin-left: 0;
-    margin-top: 0.5rem;
-  }
-
   .site { padding: 3rem 1rem 5rem; }
 
   .home-photo-row {
     grid-template-columns: 1fr;
+  }
+
+  .home-photo-col {
+    padding-top: 0;
+    display: flex;
+    justify-content: center;
   }
 
   .home-photo-row img,
@@ -295,7 +295,8 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 }
 
 @media(max-width: 400px) {
-  nav { gap: 0.8rem; font-size: 10px; }
+  nav { gap: 0.8rem; }
+  nav a { font-size: 10px; }
   #name-display { font-size: 2rem; }
 }
 </style>
@@ -313,7 +314,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 <!-- SPLASH -->
 <div class="splash" id="splash">
 
-  <canvas id="phase-canvas" aria-hidden="true"></canvas>
+  <canvas id="phase-canvas" aria-label="Animated dynamical system phase portrait" role="img"></canvas>
 
   <div class="splash-title-row" id="title-row">
     <div id="name-display"></div>
@@ -321,11 +322,6 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 
   <div class="tagline-wrap" id="tagline-wrap" style="opacity:0;">
     Connecting mathematics and microbial evolution.
-  </div>
-
-  <div class="splash-meta" id="splash-meta" style="opacity:0;">
-    PhD Student &middot; BEES &middot; University of Maryland
-    <span class="nsf-badge">NSF Graduate Research Fellow</span>
   </div>
 
   <div class="scroll-hint" id="scroll-hint">
@@ -343,7 +339,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
   <!-- HOME -->
   <div class="page active" id="home">
     <div class="home-photo-row anim anim-d1">
-      <div>
+      <div class="home-photo-col">
         <img src="photo.jpg" alt="Ethan Rappaport" id="portrait"
              onerror="this.style.display='none';document.getElementById('portrait-ph').style.display='flex';">
         <div class="photo-placeholder" id="portrait-ph" style="display:none;">
@@ -375,8 +371,8 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
       </div>
       <div class="home-block">
         <h3>Contact</h3>
-        <div class="contact-line"><span class="label">Email</span><a href="mailto:esrdev@gmail.com">esrdev@gmail.com</a></div>
-        <div class="contact-line"><span class="label">Program</span>BEES, UMD</div>
+        <div class="contact-line"><span class="label">Email</span><a href="mailto:esrapp@umd.edu">esrapp@umd.edu</a></div>
+        <div class="contact-line"><span class="label">Program</span><span style="font-size:0.88rem;">Biological Sciences – Behavior, Ecology, Evolution, and Systematics (BISI-BEES), University of Maryland</span></div>
         <div class="contact-line"><span class="label">Location</span>College Park, MD</div>
       </div>
     </div>
@@ -386,30 +382,18 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
   <div class="page" id="research">
     <div class="section-header anim anim-d1"><h2>Research</h2></div>
     <div class="research-block anim anim-d2">
+      <img src="colonization-resistance.jpg" alt="Colonization resistance research"
+           onerror="this.style.display='none'"
+           style="width:100%;max-height:220px;object-fit:cover;border-radius:1px;margin-bottom:1rem;display:block;">
       <h3>Colonization resistance in microbial communities</h3>
       <div class="meta">Momeni Lab &middot; Boston College &middot; 2023&ndash;2025</div>
-      <p>My undergraduate thesis and first-author publication examined how resource diversity and supply rates shape the ability of resident microbial communities to resist invasion. I developed a consumer-resource population model and analyzed how environmental parameters drive bifurcations in invasion outcomes, finding that both resource richness and supply rates are key determinants of colonization resistance.</p>
-      <div class="tag-row">
-        <span class="tag">consumer-resource models</span><span class="tag">colonization resistance</span>
-        <span class="tag">dynamical systems</span><span class="tag">microbial ecology</span>
-      </div>
     </div>
     <div class="research-block anim anim-d3">
+      <img src="host-phage.jpg" alt="Host-phage coevolution research"
+           onerror="this.style.display='none'"
+           style="width:100%;max-height:220px;object-fit:cover;border-radius:1px;margin-bottom:1rem;display:block;">
       <h3>Host-phage coevolution dynamics</h3>
       <div class="meta">University of Maryland &middot; 2025&ndash;present</div>
-      <p>I am developing computational models of host-phage coevolution, simulating how reciprocal selection pressures drive the diversification of bacterial hosts and their viral predators. This work combines differential equation modeling with phylogenetic tracking to characterize how coevolutionary dynamics produce diversity over ecological timescales.</p>
-      <div class="tag-row">
-        <span class="tag">host-phage coevolution</span><span class="tag">ODE/DDE systems</span>
-        <span class="tag">phylogenetics</span><span class="tag">MATLAB</span>
-      </div>
-    </div>
-    <div class="research-block anim anim-d4">
-      <h3>Spatial structure and microbial interactions</h3>
-      <div class="meta">Collaborative work &middot; 2025&ndash;2026</div>
-      <p>Contributing author on work examining how spatial structure mediates the outcomes of population interactions in microbial communities, with implications for community assembly and stability in structured environments.</p>
-      <div class="tag-row">
-        <span class="tag">spatial ecology</span><span class="tag">community assembly</span><span class="tag">population dynamics</span>
-      </div>
     </div>
   </div>
 
@@ -419,7 +403,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     <div class="pub-entry anim anim-d2">
       <div class="pub-year">2026</div>
       <div class="pub-content">
-        <div class="title">Interplay of spatial structure and population interactions in microbial communities</div>
+        <div class="title"><a href="https://doi.org/10.1111/1462-2920.70262" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:0.5px solid var(--rule);">Interplay of spatial structure and population interactions in microbial communities</a></div>
         <div class="authors">Warrier V., Chen Y., <strong>Rappaport E.</strong>, Haruta S., Youk H., Momeni B.</div>
         <div class="venue">Environmental Microbiology</div>
       </div>
@@ -427,17 +411,9 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     <div class="pub-entry anim anim-d3">
       <div class="pub-year">2025</div>
       <div class="pub-content">
-        <div class="title">Resource diversity and supply drive colonization resistance</div>
+        <div class="title"><a href="https://doi.org/10.1371/journal.pcbi.1013648" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:0.5px solid var(--rule);">Resource diversity and supply drive colonization resistance</a></div>
         <div class="authors"><strong>Rappaport E.</strong>, Mirollo R., Momeni B.</div>
         <div class="venue">PLoS Computational Biology</div>
-      </div>
-    </div>
-    <div class="pub-entry anim anim-d4">
-      <div class="pub-year">2025</div>
-      <div class="pub-content">
-        <div class="title">Colonization resistance in a microbial consumer-resource population model</div>
-        <div class="authors"><strong>Rappaport E.</strong></div>
-        <div class="venue">Bachelor's thesis &middot; Boston College</div>
       </div>
     </div>
   </div>
@@ -447,34 +423,31 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     <div class="section-header anim anim-d1"><h2>Teaching</h2></div>
 
     <p class="teaching-intro anim anim-d2">
-      My approach to teaching grew directly out of my experience making mathematical biology accessible to broad audiences — a skill sharpened by years of explaining consumer-resource dynamics and invasion theory to collaborators across disciplines. I prioritize building intuition before formalism, and I adapt explanations to the learner's background rather than assuming a fixed entry point.
+      My teaching centers on making mathematics legible — not just procedurally, but conceptually. I am especially interested in how geometric intuition, phase portraits, and careful notation can make ideas from analysis and dynamical systems accessible to students encountering them for the first time.
     </p>
 
     <div class="teaching-block anim anim-d2">
-      <h3>Tutor and Grader</h3>
-      <div class="meta">Department of Mathematics, Boston College &middot; 2022&ndash;2025</div>
-      <p>Staffed drop-in hours at the Math Learning Center, supporting students across courses ranging from introductory calculus through linear algebra, probability, and proof-writing. Working with students from diverse majors and preparation levels developed my ability to rapidly diagnose conceptual gaps and offer multiple explanatory framings of the same idea.</p>
-      <p>Also held private sessions with secondary students in algebra and precalculus, giving me experience calibrating explanations for learners at early stages of mathematical development — a skill directly relevant to broadening access to quantitative methods in biology.</p>
+      <h3>Private Mathematics Tutor</h3>
+      <div class="meta">Independent &middot; 2025&ndash;present</div>
+      <p>One-on-one tutoring for undergraduate and secondary students in calculus, linear algebra, differential equations, and proof-based mathematics. Sessions focus on building conceptual fluency alongside computational skill — working through why a theorem is true, not only how to apply it.</p>
     </div>
 
     <div class="teaching-block anim anim-d3">
-      <h3>Math Instructor — Tricky Topics in Geometry</h3>
-      <div class="meta">Summer Scholars Program, Friends' Central School &middot; 2021</div>
-      <p>Designed and delivered a preparatory geometry course for incoming high school students during COVID-19 restrictions. I built the curriculum from scratch, covering triangle similarity and congruence, area and volume, and introductory trigonometry. All instruction was conducted asynchronously via recorded lectures supplemented by daily live Zoom sessions.</p>
-      <p>This experience taught me that asynchronous formats demand unusually clear exposition — every ambiguity that a live instructor could catch in real time must instead be anticipated and resolved in the material itself. It also demonstrated the value of accessible digital tools for maintaining engagement and checking comprehension at a distance.</p>
+      <h3>Tutor and Grader</h3>
+      <div class="meta">Department of Mathematics, Boston College &middot; 2022&ndash;2025</div>
+      <p>Staffed drop-in hours at the Math Learning Center, supporting students across introductory calculus, multivariable calculus, linear algebra, probability, and proof-writing. Working across courses and preparation levels required quickly diagnosing where a student's understanding broke down and offering multiple framings of the same idea until one connected.</p>
     </div>
 
     <div class="teaching-block anim anim-d4">
-      <h3>Science Communication and Seminar Presentation</h3>
-      <div class="meta">Boston College &middot; University of Maryland &middot; 2023&ndash;present</div>
-      <p>A recurring challenge in presenting mathematical biology is that equations cause many audiences — including scientists in adjacent fields — to disengage. I have developed seminar presentations for venues ranging from interdisciplinary biology symposia (Harvard Microbial Science Initiative, M3 Mid-Atlantic Microbiome Meet-up) to physics and data science audiences, consistently adapting technical depth and framing to the room.</p>
-      <p>This practice of translating between mathematical formalism and biological narrative is, I believe, central to effective graduate-level instruction in quantitative life sciences.</p>
+      <h3>Math Instructor — Tricky Topics in Geometry</h3>
+      <div class="meta">Summer Scholars Program, Friends' Central School &middot; 2021</div>
+      <p>Designed and delivered a preparatory geometry course from scratch, covering triangle similarity and congruence, area and volume, and introductory trigonometry. Instruction was asynchronous via recorded lectures supplemented by daily live sessions — a format that demands unusually clean exposition, since every ambiguity a live instructor might catch in real time must instead be anticipated in the material itself.</p>
     </div>
 
     <div class="philosophy-block anim anim-d5">
       <h3>Teaching philosophy</h3>
-      <p>I believe quantitative reasoning is learnable by anyone willing to engage with it patiently — the bottleneck is almost never ability, but confidence and prior exposure. In my teaching I lead with geometric and biological intuition, only then layering in the formal machinery. I treat the moment when a student says "I've never thought of it that way" as the actual goal, not a byproduct.</p>
-      <p>I am particularly interested in developing pedagogical approaches that reduce the activation barrier for biology students encountering mathematical modeling for the first time — drawing on my own experience constructing models that needed to be legible to microbiologists, mathematicians, and physicists simultaneously.</p>
+      <p>Mathematics is not primarily a collection of techniques — it is a way of seeing. In my teaching I lead with pictures and intuition, introduce definitions only once we have something concrete to define, and treat a student saying "now I actually see why that's true" as the real goal. I find that most barriers to mathematical understanding are about confidence and prior exposure, not ability.</p>
+      <p>I am particularly interested in helping students from biology and other sciences develop comfort with formal mathematical reasoning — drawing on my experience building models that had to be legible simultaneously to microbiologists, mathematicians, and physicists.</p>
     </div>
   </div>
 
@@ -486,7 +459,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
       <div class="cv-entry">
         <div class="cv-date">2026&ndash;</div>
         <div class="cv-body">
-          <div class="role">Ph.D., Behavior, Ecology, Evolution and Systematics</div>
+          <div class="role">Ph.D., Biological Sciences – Behavior, Ecology, Evolution, and Systematics (BISI-BEES)</div>
           <div class="place">University of Maryland, College Park</div>
         </div>
       </div>
@@ -495,7 +468,7 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
         <div class="cv-body">
           <div class="role">B.S., Mathematics and Biology &mdash; summa cum laude</div>
           <div class="place">Boston College</div>
-          <div class="desc">Scholar of the College &middot; Departmental honors &middot; Thesis: Colonization resistance in a microbial consumer-resource population model</div>
+          <div class="desc">Scholar of the College &middot; Departmental honors<br>Thesis: Colonization resistance in a microbial consumer-resource population model</div>
         </div>
       </div>
     </div>
@@ -522,6 +495,14 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
     </div>
     <div class="cv-section anim anim-d5">
       <h3>Teaching</h3>
+      <div class="cv-entry">
+        <div class="cv-date">2025&ndash;present</div>
+        <div class="cv-body">
+          <div class="role">Private Mathematics Tutor</div>
+          <div class="place">Independent</div>
+          <div class="desc">One-on-one tutoring in calculus, linear algebra, differential equations, and proof-based mathematics for undergraduate and secondary students.</div>
+        </div>
+      </div>
       <div class="cv-entry">
         <div class="cv-date">2022&ndash;2025</div>
         <div class="cv-body">
@@ -557,146 +538,269 @@ hr.divider { border:none; border-top:0.5px solid var(--rule); margin:2.5rem 0; }
 // We set the actual text content immediately
 document.getElementById('name-display').textContent = 'Ethan Rappaport';
 
-/* ── PHASE PORTRAIT ── */
+/* ── DYNAMICAL SYSTEM ANIMATION ── */
 (function(){
   var canvas = document.getElementById('phase-canvas');
-  var ctx = canvas.getContext('2d');
+  var ctx    = canvas.getContext('2d');
+  var INK    = '#2d4a2d';
+  var W, H, DPR;
+  var animRunning = false;
+  var rafId;
 
-  // Lotka-Volterra: dx/dt = x(a-by), dy/dt = y(cx-d)
-  // Conserved: H = cx - d*ln(x) + ay - b*ln(y)  → exact closed orbits
-  var a=1.0, b=0.5, c=0.5, d=0.8;
-  var xEq = d/c, yEq = a/b; // equilibrium (1.6, 2.0)
+  /* ── Random fixed-point type chosen once per page load ── */
+  var MODES = [
+    /* saddle: one positive, one negative real eigenvalue */
+    function() {
+      var l1 =  0.55 + Math.random()*0.5;
+      var l2 = -(0.55 + Math.random()*0.5);
+      var th = Math.random()*Math.PI;
+      return rotatedDiag(l1, l2, th);
+    },
+    /* stable node: both eigenvalues real negative */
+    function() {
+      var l1 = -(0.4 + Math.random()*0.5);
+      var l2 = -(0.9 + Math.random()*0.5);
+      var th = Math.random()*Math.PI;
+      return rotatedDiag(l1, l2, th);
+    },
+    /* unstable node: both eigenvalues real positive */
+    function() {
+      var l1 = 0.4 + Math.random()*0.4;
+      var l2 = 0.8 + Math.random()*0.4;
+      var th = Math.random()*Math.PI;
+      return rotatedDiag(l1, l2, th);
+    },
+    /* stable focus (spiral in): complex eigs with negative real part */
+    function() {
+      var alpha = -(0.15 + Math.random()*0.25);
+      var beta  =   0.7  + Math.random()*0.6;
+      return [[alpha, -beta],[beta, alpha]];
+    },
+    /* unstable focus (spiral out) */
+    function() {
+      var alpha =  0.12 + Math.random()*0.18;
+      var beta  =  0.7  + Math.random()*0.6;
+      return [[alpha, -beta],[beta, alpha]];
+    },
+    /* center: purely imaginary eigs */
+    function() {
+      var beta = 0.6 + Math.random()*0.6;
+      var skew = (Math.random()-0.5)*0.3;
+      return [[skew, -beta],[beta, skew*0.5]];
+    }
+  ];
 
-  function integrateOrbit(x0, y0) {
-    var pts = [], x = x0, y = y0, dt = 0.014;
-    pts.push({x:x, y:y});
-    for (var i=0; i<8000; i++) {
-      var k1x=x*(a-b*y),           k1y=y*(c*x-d);
-      var x2=x+dt/2*k1x, y2=y+dt/2*k1y;
-      var k2x=x2*(a-b*y2),         k2y=y2*(c*x2-d);
-      var x3=x+dt/2*k2x, y3=y+dt/2*k2y;
-      var k3x=x3*(a-b*y3),         k3y=y3*(c*x3-d);
-      var x4=x+dt*k3x,   y4=y+dt*k3y;
-      var k4x=x4*(a-b*y4),         k4y=y4*(c*x4-d);
-      x += dt/6*(k1x+2*k2x+2*k3x+k4x);
-      y += dt/6*(k1y+2*k2y+2*k3y+k4y);
-      if (x<=0||y<=0||x>25||y>25) break;
-      pts.push({x:x, y:y});
-      if (i>150) {
-        var dx=x-x0, dy=y-y0;
-        if (Math.sqrt(dx*dx+dy*dy)<0.03) break;
+  function rotatedDiag(l1, l2, th) {
+    var c=Math.cos(th), s=Math.sin(th);
+    /* A = R * diag(l1,l2) * R^T */
+    return [
+      [l1*c*c + l2*s*s,  (l1-l2)*c*s],
+      [(l1-l2)*c*s,       l1*s*s + l2*c*c]
+    ];
+  }
+
+  var A = MODES[Math.floor(Math.random()*MODES.length)]();
+
+  /* ── Particles ── */
+  var NPART = 55;
+  var TRAIL = 32;
+  var particles = [];
+
+  function spawnParticle() {
+    /* Spawn from one of the four edges, randomly */
+    var edge = Math.floor(Math.random()*4);
+    var x, y;
+    var hw = W*0.5, hh = H*0.5;  /* half-width/height in screen px */
+    var spread = 0.88;
+    if (edge === 0) { x = -hw*spread + Math.random()*2*hw*spread; y = -hh; }       /* top */
+    else if (edge===1) { x = hw;  y = -hh*spread + Math.random()*2*hh*spread; }    /* right */
+    else if (edge===2) { x = -hw*spread + Math.random()*2*hw*spread; y = hh; }     /* bottom */
+    else               { x = -hw; y = -hh*spread + Math.random()*2*hh*spread; }    /* left */
+    /* Convert screen offset from center to phase-space coords */
+    return {
+      x: x / SCALE,
+      y: -y / SCALE,  /* canvas y is flipped vs math y */
+      life: 0,
+      maxLife: 1.2 + Math.random()*1.4,
+      trail: []
+    };
+  }
+
+  var SCALE; /* px per phase-space unit */
+
+  function initParticles() {
+    particles = [];
+    for (var i=0; i<NPART; i++) {
+      var p = spawnParticle();
+      /* Stagger initial life so they don't all appear at once */
+      p.life = Math.random() * p.maxLife;
+      /* Pre-integrate to match staggered life */
+      var steps = Math.floor(p.life / 0.018);
+      for (var s=0; s<steps; s++) stepParticle(p, 0.018);
+      particles[i] = p;
+    }
+  }
+
+  function stepParticle(p, dt) {
+    /* RK2 on ẋ = Ax */
+    var a=A[0][0], b=A[0][1], c=A[1][0], d=A[1][1];
+    var dx1 = a*p.x + b*p.y, dy1 = c*p.x + d*p.y;
+    var x2 = p.x + dt/2*dx1, y2 = p.y + dt/2*dy1;
+    var dx2 = a*x2 + b*y2, dy2 = c*x2 + d*y2;
+    p.x += dt*dx2; p.y += dt*dy2;
+  }
+
+  /* Convert phase-space (x,y) to canvas pixel (cx=center) */
+  function toCanvas(px, py) {
+    return {
+      sx: W/2 + px * SCALE,
+      sy: H/2 - py * SCALE
+    };
+  }
+
+  function draw() {
+    if (!animRunning) return;
+    ctx.clearRect(0, 0, W, H);
+
+    var dt = 0.022;
+    var a=A[0][0], b=A[0][1], c=A[1][0], d=A[1][1];
+
+    /* ── Faint vector field grid ── */
+    var gridN = 13;
+    var gridSpan = Math.min(W, H*1.4) * 0.46;
+    var gs = gridSpan * 2 / gridN;
+    for (var gi=0; gi<=gridN; gi++) {
+      for (var gj=0; gj<=gridN; gj++) {
+        var gx = (-gridSpan + gi*gs) / SCALE;
+        var gy = (-gridSpan + gj*gs) / SCALE;
+        var fx = a*gx + b*gy, fy = c*gx + d*gy;
+        var flen = Math.sqrt(fx*fx + fy*fy) || 1;
+        var arrowLen = gs * 0.22;
+        fx = fx/flen * arrowLen; fy = fy/flen * arrowLen;
+        var sc = toCanvas(gx, gy);
+        var ex = sc.sx + fx, ey = sc.sy - fy;
+        /* Only draw if within canvas */
+        if (sc.sx < 0 || sc.sx > W || sc.sy < 0 || sc.sy > H) continue;
+        ctx.beginPath();
+        ctx.moveTo(sc.sx, sc.sy);
+        ctx.lineTo(ex, ey);
+        ctx.strokeStyle = INK; ctx.lineWidth = 0.55; ctx.globalAlpha = 0.11; ctx.stroke();
+        /* Arrowhead */
+        var ang = Math.atan2(-fy, fx);
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 3.5*Math.cos(ang-0.42), ey - 3.5*Math.sin(ang-0.42));
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 3.5*Math.cos(ang+0.42), ey - 3.5*Math.sin(ang+0.42));
+        ctx.globalAlpha = 0.08; ctx.lineWidth = 0.5; ctx.stroke();
       }
     }
-    return pts;
+
+    /* ── Particles ── */
+    particles.forEach(function(p, i) {
+      p.life += dt / p.maxLife;
+
+      /* Record trail point */
+      var sc = toCanvas(p.x, p.y);
+      p.trail.push({x: sc.sx, y: sc.sy});
+      if (p.trail.length > TRAIL) p.trail.shift();
+
+      stepParticle(p, dt);
+
+      /* Respawn if too old or escaped too far */
+      var dist = Math.sqrt(p.x*p.x + p.y*p.y);
+      if (p.life > 1 || dist > (Math.min(W,H)*0.9/SCALE)) {
+        var np = spawnParticle();
+        particles[i] = np;
+        return;
+      }
+
+      if (p.trail.length < 2) return;
+
+      /* Draw trail */
+      var lifeAlpha = Math.min(p.life * 3, 1) * Math.min((1 - p.life) * 2.5, 1);
+      for (var ti=1; ti<p.trail.length; ti++) {
+        var f = ti / p.trail.length;
+        var pa = p.trail[ti-1], pb = p.trail[ti];
+        ctx.beginPath();
+        ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 0.4 + f * 1.0;
+        ctx.globalAlpha = f * 0.52 * lifeAlpha;
+        ctx.stroke();
+      }
+
+      /* Head dot */
+      var head = p.trail[p.trail.length-1];
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, 1.8, 0, Math.PI*2);
+      ctx.fillStyle = INK; ctx.globalAlpha = 0.70 * lifeAlpha; ctx.fill();
+    });
+
+    /* ── Origin dot ── */
+    var orig = toCanvas(0, 0);
+    ctx.beginPath(); ctx.arc(orig.sx, orig.sy, 2.8, 0, Math.PI*2);
+    ctx.fillStyle = INK; ctx.globalAlpha = 0.30; ctx.fill();
+
+    ctx.globalAlpha = 1;
+    rafId = requestAnimationFrame(draw);
   }
 
-  // 3 orbits — small, medium, large
-  var seeds = [0.6, 1.1, 1.7];
-  var orbits = seeds.map(function(s){
-    return integrateOrbit(xEq+s, yEq);
-  }).filter(function(o){ return o.length>20; });
+  function resize() {
+    var r = canvas.getBoundingClientRect();
+    W = r.width; H = r.height;
+    DPR = window.devicePixelRatio || 1;
+    canvas.width  = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    SCALE = Math.min(W, H) * 0.30;
+  }
 
-  // One travelling dot per orbit, staggered
-  var heads = orbits.map(function(pts, i){
-    return { idx: Math.floor(pts.length*i/orbits.length), trail:[], speed: 0.9+i*0.35 };
+  function init() {
+    resize();
+    initParticles();
+  }
+
+  window.showPhasePortrait = function() {
+    if (!animRunning) {
+      animRunning = true;
+      canvas.style.transition = 'opacity 1.2s ease';
+      canvas.classList.add('visible');
+      if (!W) init();
+      draw();
+    }
+  };
+
+  window.hidePhasePortrait = function() {
+    animRunning = false;
+    cancelAnimationFrame(rafId);
+    canvas.classList.remove('visible');
+  };
+
+  window.addEventListener('resize', function() {
+    resize();
+    if (animRunning) { initParticles(); }
   });
 
-  var W, H, scaleX, scaleY, offX, offY;
-
-  function computeLayout() {
-    W = canvas.offsetWidth;
-    H = canvas.offsetHeight;
-    canvas.width  = Math.round(W * devicePixelRatio);
-    canvas.height = Math.round(H * devicePixelRatio);
-    ctx.scale(devicePixelRatio, devicePixelRatio);
-
-    var xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
-    orbits.forEach(function(pts){
-      pts.forEach(function(p){
-        if(p.x<xMin)xMin=p.x; if(p.x>xMax)xMax=p.x;
-        if(p.y<yMin)yMin=p.y; if(p.y>yMax)yMax=p.y;
-      });
-    });
-
-    // Portrait lives in the BOTTOM 40% of the splash, horizontally centred
-    var padX      = W * 0.12;
-    var zoneTop   = H * 0.60;   // orbits start no higher than 60% down
-    var zoneBot   = H * 0.10;   // gap above scroll hint
-    var drawW = W - padX*2;
-    var drawH = H - zoneTop - zoneBot;
-
-    var rx=xMax-xMin, ry=yMax-yMin;
-    if (rx/ry > drawW/drawH) { scaleX=drawW/rx; scaleY=scaleX; }
-    else                      { scaleY=drawH/ry; scaleX=scaleY; }
-
-    offX = padX + (drawW-rx*scaleX)/2 - xMin*scaleX;
-    offY = zoneTop + (drawH-ry*scaleY)/2 - yMin*scaleY;
-  }
-
-  function toSc(p){ return {sx: offX+p.x*scaleX, sy: H-(offY+p.y*scaleY)}; }
-
-  var TRAIL = 55;
-  function drawFrame(){
-    ctx.clearRect(0,0,W,H);
-
-    // Static faint orbits
-    orbits.forEach(function(pts){
-      if(pts.length<2) return;
-      ctx.beginPath();
-      var p0=toSc(pts[0]); ctx.moveTo(p0.sx,p0.sy);
-      for(var j=1;j<pts.length;j++){ var p=toSc(pts[j]); ctx.lineTo(p.sx,p.sy); }
-      ctx.closePath();
-      ctx.strokeStyle='#2d4a2d'; ctx.lineWidth=0.7; ctx.globalAlpha=0.10; ctx.stroke();
-    });
-
-    // Animated heads
-    orbits.forEach(function(pts,i){
-      var h=heads[i];
-      for(var s=0;s<Math.round(h.speed);s++){
-        h.idx=(h.idx+1)%pts.length;
-        h.trail.push(h.idx);
-        if(h.trail.length>TRAIL) h.trail.shift();
-      }
-      if(h.trail.length<2) return;
-      for(var t=1;t<h.trail.length;t++){
-        var pa=toSc(pts[h.trail[t-1]]), pb=toSc(pts[h.trail[t]]);
-        var f=t/h.trail.length;
-        ctx.beginPath(); ctx.moveTo(pa.sx,pa.sy); ctx.lineTo(pb.sx,pb.sy);
-        ctx.strokeStyle='#2d4a2d'; ctx.lineWidth=0.8+f*0.7; ctx.globalAlpha=f*0.55; ctx.stroke();
-      }
-      var hp=toSc(pts[h.idx]);
-      ctx.beginPath(); ctx.arc(hp.sx,hp.sy,2.2,0,Math.PI*2);
-      ctx.fillStyle='#2d4a2d'; ctx.globalAlpha=0.75; ctx.fill();
-    });
-
-    ctx.globalAlpha=1;
-    requestAnimationFrame(drawFrame);
-  }
-
-  computeLayout();
-  window.addEventListener('resize', function(){ computeLayout(); heads.forEach(function(h){h.trail=[];}); });
-  drawFrame();
-
-  // Fade in after name has settled
-  setTimeout(function(){
-    canvas.style.transition='opacity 1.4s ease';
-    canvas.classList.add('visible');
-  }, 800);
+  init();
 })();
 
-/* ── TAGLINE + META fade in after name ── */
+/* ── TAGLINE fade in after name ── */
 setTimeout(function(){
   var tw = document.getElementById('tagline-wrap');
   if(tw){ tw.style.transition='opacity 0.8s ease'; tw.style.opacity='1'; }
 }, 600);
 setTimeout(function(){
-  var meta = document.getElementById('splash-meta');
-  if(meta){ meta.style.transition='opacity 0.8s ease'; meta.style.opacity='1'; }
-  setTimeout(function(){
-    var hint=document.getElementById('scroll-hint');
-    if(hint){ hint.style.transition='opacity 0.8s ease'; hint.style.opacity='1'; }
-  }, 500);
+  var hint=document.getElementById('scroll-hint');
+  if(hint){ hint.style.transition='opacity 0.8s ease'; hint.style.opacity='1'; }
 }, 1100);
+
+/* ── PHASE PORTRAIT FADE IN ── */
+setTimeout(function(){
+  if (window.showPhasePortrait) {
+    window.showPhasePortrait();
+  }
+}, 700);
 
 /* ── PAGE SWITCHING ── */
 var splash=document.getElementById('splash');
@@ -706,6 +810,8 @@ function show(id,el){
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
   splash.style.display=id==='home'?'':'none';
+  if(id==='home'){ if(window.showPhasePortrait) window.showPhasePortrait(); }
+  else { if(window.hidePhasePortrait) window.hidePhasePortrait(); }
   window.scrollTo(0,0);
   triggerAnims();
 }
